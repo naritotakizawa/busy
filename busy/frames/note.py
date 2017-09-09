@@ -12,14 +12,10 @@ class EditorNoteBook(ttk.Notebook):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.editor_list = []
-        self.create_widgets()
-
-    def create_widgets(self):
-        self.add_tab()
 
     def add_tab(self, path=None):
         """新しいタブを追加する."""
-        
+
         # エディタの作成
         editor = EditorFrame(self, path)
 
@@ -35,10 +31,10 @@ class EditorNoteBook(ttk.Notebook):
 
         # NoteBookにエディタを追加
         self.add(editor, text=name)
-        
+
         # エディタの参照を保持するため、リストに格納
         self.editor_list.append(editor)
-        
+
         # 今開いたタブを選択する
         now_open_tab = self.tabs()[-1]
         self.select(now_open_tab)
@@ -67,8 +63,10 @@ class EditorNoteBook(ttk.Notebook):
 
         # 保存したと表示する
         if current_editor.path:
-            mediator.event.add_history(text='save {0}'.format(current_editor.path))
-            
+            mediator.event.add_history(
+                text='save {0}'.format(current_editor.path)
+            )
+
     def delete_tab(self, event):
         """選択中のタブを削除する."""
         current_editor_id, index = self.get_current_editor()
@@ -83,7 +81,7 @@ class EditorNoteBook(ttk.Notebook):
         return self.editor_list[index], index
 
 
-if __name__  == '__main__':
+if __name__ == '__main__':
     root = tk.Tk()
     app = EditorNoteBook(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
@@ -94,12 +92,4 @@ if __name__  == '__main__':
     root.columnconfigure(0, weight=1, minsize=100)
     root.rowconfigure(0, weight=1, minsize=100)
     root.mainloop()
-
-
-
-
-
-
-
-
 

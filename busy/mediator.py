@@ -3,7 +3,7 @@ from tkinter import filedialog
 
 class BaseMediator:
     """テスト用のイベント仲介オブジェクト.
-    
+
     例えばnote.pyを直接実行する、等の部品毎のテストをする場合に使ってください。
 
     """
@@ -13,6 +13,7 @@ class BaseMediator:
             print('call', name, args, kwargs)
         return inner
 
+
 class EventMediator:
     """遠く離れたウィジェット間でのやりとりを仲介するクラス."""
 
@@ -21,7 +22,7 @@ class EventMediator:
         self.info_frame = info_frame
         self.path_frame = path_frame
         self.note_frame = note_frame
-    
+
     def save_file(self, event=None):
         """ファイルの保存."""
         self.note_frame.save_file(event)
@@ -40,7 +41,7 @@ class EventMediator:
         if file_path is None:
             file_path = filedialog.askopenfilename()
         if file_path:
-            self.note_frame.add_tab(file_path)     
+            self.note_frame.add_tab(file_path)
 
     def add_history(self, text):
         """履歴にテキストを追加する."""
@@ -48,8 +49,8 @@ class EventMediator:
 
     def clear_history(self):
         """履歴欄をクリアする."""
-        self.info_frame.clear_history(text)
-    
+        self.info_frame.clear_history()
+
     def update_history(self, text):
         """履歴欄を更新する."""
         self.info_frame.update_history(text)
@@ -60,8 +61,8 @@ class EventMediator:
 
     def clear_lint(self):
         """スタイルチェック欄をクリアする."""
-        self.info_frame.clear_lint(text)
-    
+        self.info_frame.clear_lint()
+
     def update_lint(self, text):
         """スタイルチェック欄を更新する."""
         self.info_frame.update_lint(text)
@@ -69,8 +70,8 @@ class EventMediator:
 
 event = BaseMediator()
 
+
 def set_mediator(*widgets):
     MediatorClass = EventMediator  # Todo settings.py等から参照クラスを決めたい
     event = MediatorClass(*widgets)
     globals()['event'] = event
-

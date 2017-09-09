@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import filedialog
+
 from busy import mediator
 from busy.frames import PathTreeFrame, InfoFrame, EditorNoteBook
 
@@ -20,8 +20,9 @@ class Busy(ttk.Frame):
 
         self.path_frame.grid(row=0, column=0, sticky=(tk.N, tk.S, tk.E, tk.W))
         self.note_frame.grid(row=0, column=1, sticky=(tk.N, tk.S, tk.E, tk.W))
-        self.info_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
-        
+        self.info_frame.grid(
+            row=1, column=0, columnspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
+
         self.path_frame.grid_propagate(False)
         self.note_frame.grid_propagate(False)
         self.info_frame.grid_propagate(False)
@@ -42,9 +43,10 @@ class Busy(ttk.Frame):
         self.master.bind('<Control-KeyPress-n>', mediator.event.new_file)
         self.master.bind('<Control-KeyPress-o>', mediator.event.open_file)
 
+
 def main():
     root = tk.Tk()
-    root.title('busy Editor')
+    root.title('Busy Editor')
     app = Busy(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
     root.columnconfigure(0, weight=1)
@@ -54,3 +56,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

@@ -13,12 +13,14 @@ class InfoFrame(ttk.Frame):
     def create_widgets(self):
         # 左側、履歴
         self.history = tk.Text(self, font=('Helvetica', 14))
-        ysb_history = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.history.yview)
+        ysb_history = ttk.Scrollbar(
+            self, orient=tk.VERTICAL, command=self.history.yview)
         self.history.configure(yscroll=ysb_history.set)
 
         # 右側、スタイルチェック
         self.lint = tk.Text(self, font=('Helvetica', 14))
-        ysb_lint = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.lint.yview)
+        ysb_lint = ttk.Scrollbar(
+            self, orient=tk.VERTICAL, command=self.lint.yview)
         self.lint.configure(yscroll=ysb_lint.set)
 
         self.history.grid(row=0, column=0, sticky=(tk.N, tk.S, tk.E, tk.W))
@@ -40,7 +42,7 @@ class InfoFrame(ttk.Frame):
     def clear_history(self):
         """履歴欄をクリアする."""
         self.history.delete('1.0', tk.END)
-    
+
     def update_history(self, text):
         """履歴欄を更新する."""
         self.clear_history()
@@ -54,11 +56,12 @@ class InfoFrame(ttk.Frame):
     def clear_lint(self):
         """スタイルチェック欄をクリアする."""
         self.lint.delete('1.0', tk.END)
-    
+
     def update_lint(self, text):
         """スタイルチェック欄を更新する."""
         self.clear_lint()
         self.add_lint(text)
+
 
 def main():
     root = tk.Tk()
@@ -71,7 +74,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-

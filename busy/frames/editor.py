@@ -44,9 +44,9 @@ class EditorFrame(ttk.Frame):
 
     def __init__(self, master, path=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        self.path = path
         self.create_widgets()
         self.create_event()
+        self.path = path
 
     @property
     def path(self):
@@ -56,18 +56,19 @@ class EditorFrame(ttk.Frame):
     @path.setter
     def path(self, opening_file_path):
         """属性pathのセッター.
-        
+
         ファイルパスから、適切なエディタのスタイルオブジェクトを取得する
-        
+
         """
         self._path = opening_file_path
-        self.code_style = get_code_style(opening_file_path)
+        self.code_style = get_code_style(self, opening_file_path)
 
     def create_widgets(self):
         # 入力欄、行番号欄、スクロール部分を作成
         self.text = CustomText(self, font=('Helvetica', 14))
         self.linenumbers = tk.Canvas(self, width=30)
-        self.vsb = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.text.yview)
+        self.vsb = ttk.Scrollbar(
+            self, orient=tk.VERTICAL, command=self.text.yview)
 
         # 入力欄にスクロールを紐付け
         self.text.configure(yscrollcommand=self.vsb.set)
@@ -88,6 +89,7 @@ class EditorFrame(ttk.Frame):
         """イベントの設定."""
         # テキストの変更時
         self.text.bind('<<Change>>', self.update_line_number)
+        self.text.bind('<<Change>>', self.highlight, '+')
 
         # テキスト内でのスクロール時
         self.text.bind('<<Scroll>>', self.update_line_number)
@@ -110,7 +112,7 @@ class EditorFrame(ttk.Frame):
         # エディタの最終行
         last_row = self.text.index(tk.END)
         last_row_number = int(last_row.split('.')[0])
-        
+
         for row_number in range(first_row_number, last_row_number):
             # 各行の座標等のデータを取得
             dline = self.text.dlineinfo('{0}.0'.format(row_number))
@@ -126,7 +128,8 @@ class EditorFrame(ttk.Frame):
                 y = dline[1]  # y座標を取得
 
             # (x座標, y座標, 方向, 表示テキスト)を渡して行番号のテキストを作成
-            self.linenumbers.create_text(0, y, anchor=tk.NW, text=row_number, font=('Helvetica', 14))
+            self.linenumbers.create_text(
+                0, y, anchor=tk.NW, text=row_number, font=('Helvetica', 14))
 
     def get_src(self):
         """エディタの内容を返す."""
@@ -134,22 +137,21 @@ class EditorFrame(ttk.Frame):
 
     def lint(self):
         """コードのスタイルガイドチェック."""
-        return self.code_style.lint(self)
+        return self.code_style.lint()
 
     def tab(self, event):
         """タブキー押下時(半角スペすに変えたり)."""
-        return self.code_style.tab(self)
+        return self.code_style.tab()
 
-if __name__  == '__main__':
+    def highlight(self, event):
+        """テキストをハイライトする."""
+        return self.code_style.highlight()
+
+
+if __name__ == '__main__':
     root = tk.Tk()
     app = EditorFrame(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
     root.columnconfigure(0, weight=1, minsize=100)
     root.rowconfigure(0, weight=1, minsize=100)
     root.mainloop()
-
-
-
-
-
-

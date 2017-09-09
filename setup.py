@@ -10,7 +10,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
-    description='Programing Editor',
+    description='Python Programing Editor',
     long_description=README.decode(),
     url='https://github.com/naritotakizawa/busy',
     author='Narito Takizawa',
@@ -26,5 +26,5 @@ setup(
     entry_points={'console_scripts': [
         'busy = busy.main:main',
     ]},
-    install_requires=['flake8'],
+    install_requires=['flake8', 'Pygments'],
 )
