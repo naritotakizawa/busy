@@ -92,4 +92,3 @@ if __name__ == '__main__':
     root.columnconfigure(0, weight=1, minsize=100)
     root.rowconfigure(0, weight=1, minsize=100)
     root.mainloop()
-

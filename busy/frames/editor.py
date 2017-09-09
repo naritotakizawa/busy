@@ -133,7 +133,7 @@ class EditorFrame(ttk.Frame):
 
     def get_src(self):
         """エディタの内容を返す."""
-        return self.text.get('1.0', tk.END)
+        return self.text.get('1.0', 'end-1c')
 
     def lint(self):
         """コードのスタイルガイドチェック."""

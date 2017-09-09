@@ -22,7 +22,7 @@ def stdout_io():
 
 
 class NoneCodeStyle:
-    """デフォルトのエディタスタイル."""
+    """デフォルトの何もしないエディタスタイルであり、各スタイルの基底クラス."""
 
     def __init__(self, editor_frame):
         self.editor = editor_frame
@@ -46,6 +46,9 @@ class PythonCodeStyle(NoneCodeStyle):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.create_text_tag()
+
+    def create_text_tag(self):
         self.text.tag_configure('Token.Keyword', foreground='#CC7A00')
         self.text.tag_configure('Token.Keyword.Constant', foreground='#CC7A00')
         self.text.tag_configure(
@@ -60,9 +63,12 @@ class PythonCodeStyle(NoneCodeStyle):
         self.text.tag_configure('Token.Name.Exception', foreground='#003D99')
         self.text.tag_configure('Token.Name.Function', foreground='#003D99')
         self.text.tag_configure(
+            'Token.Name.Function.Magic', foreground='#003D99')
+        self.text.tag_configure(
             'Token.Name.Builtin.Pseudo', foreground='#003D99')
         self.text.tag_configure('Token.Name.Decorator', foreground='#003D99')
-        self.text.tag_configure('Token.Name.Variable.Magic', foreground='#003D99')
+        self.text.tag_configure(
+            'Token.Name.Variable.Magic', foreground='#003D99')
 
         self.text.tag_configure('Token.Operator', foreground='#CC7A00')
         self.text.tag_configure('Token.Operator.Word', foreground='#CC7A00')
@@ -94,8 +100,7 @@ class PythonCodeStyle(NoneCodeStyle):
                     error = traceback.format_exc()
                 finally:
                     output = stdout.getvalue() + error
-            if output:
-                mediator.event.update_lint(text=output)
+            mediator.event.update_lint(text=output)
 
     def highlight(self):
         """文字をハイライトする."""

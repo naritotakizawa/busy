@@ -29,7 +29,7 @@ class InfoFrame(ttk.Frame):
         ysb_lint.grid(row=0, column=3, sticky=(tk.N, tk.S))
 
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(2, weight=1)
+        self.columnconfigure(2, weight=3)
         self.rowconfigure(0, weight=1)
 
     def add_history(self, text):

@@ -7,9 +7,9 @@ tkinterで作成したPythonエディタ
 Requirement
 ===========
 :Python: 3.5以上
- 
- 
-Quick start
+
+
+Install
 ===========
 1. pipでインストールする ::
 
@@ -20,4 +20,11 @@ Quick start
 
     busy
 
+
+Usage
+===========
+:Ctrl+N: 新規ファイル
+:Ctrl+O: ファイルを開く
+:Ctrl+D: 現在のタブを閉じる
+:Ctrl+S: ファイルを保存・更新する
 
