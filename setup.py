@@ -1,9 +1,9 @@
 import os
 from setuptools import find_packages, setup
- 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rb') as readme:
-    README = readme.read()
- 
+
+with open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rb') as rdm:
+    README = rdm.read()
+
 setup(
     name='busy',
     version='0.1',

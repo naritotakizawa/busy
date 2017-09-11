@@ -1,10 +1,20 @@
-from tkinter import filedialog
+"""各ウィジェットやクラス間でのやり取りを仲介する機能を提供します.
+
+このモジュールを利用することで、
+self.mastet.master.display_frame....
+のようなわずらわしいコードを失くすことができます。単純なショートカットとしても利用できます。
+
+更にMockMediatorを使うことで、各Frameを単独で実行することも容易にしています。(python note.py等)
+
+"""
 
 
-class BaseMediator:
-    """テスト用のイベント仲介オブジェクト.
+class MockMediator:
+    """テスト、デバッグ用のイベント仲介クラス.
 
-    例えばnote.pyを直接実行する、等の部品毎のテストをする場合に使ってください。
+    set_mediator関数を使わなかった場合(note.py自体を実行した場合等)は、このクラスが使われます。
+    これはモックとして動作します。
+    本来他ウィジェットと連携する予定の処理が呼ばれてもエラーにならず、その処理が呼ばれたことを出力します。
 
     """
     def __getattr__(self, name):
@@ -15,7 +25,7 @@ class BaseMediator:
 
 
 class EventMediator:
-    """遠く離れたウィジェット間でのやりとりを仲介するクラス."""
+    """遠く離れたウィジェット間でのやりとりを仲介するデフォルトのクラス."""
 
     def __init__(self, main_frame, info_frame, path_frame, note_frame):
         self.main_frame = main_frame
@@ -25,23 +35,19 @@ class EventMediator:
 
     def save_file(self, event=None):
         """ファイルの保存."""
-        self.note_frame.save_file(event)
+        self.note_frame.save_file(event=event)
 
     def delete_tab(self, event=None):
         """タブの削除."""
-        if self.note_frame.tabs():
-            self.note_frame.delete_tab(event)
+        self.note_frame.delete_tab(event=event)
 
     def new_file(self, event=None):
         """新規ファイルを開く."""
-        self.note_frame.add_tab()
+        self.note_frame.add_tab(event=event)
 
     def open_file(self, event=None, file_path=None):
         """ファイルを開く."""
-        if file_path is None:
-            file_path = filedialog.askopenfilename()
-        if file_path:
-            self.note_frame.add_tab(file_path)
+        self.note_frame.open_file(event=event, file_path=file_path)
 
     def add_history(self, text):
         """履歴にテキストを追加する."""
@@ -68,10 +74,10 @@ class EventMediator:
         self.info_frame.update_lint(text)
 
 
-event = BaseMediator()
+event = MockMediator()
 
 
-def set_mediator(*widgets):
-    MediatorClass = EventMediator  # Todo settings.py等から参照クラスを決めたい
-    event = MediatorClass(*widgets)
+# Todo settings.py等で、具象メディエーターを設定できるようにしたい
+def set_mediator(*widgets, default_mediator_cls=EventMediator):
+    event = default_mediator_cls(*widgets)
     globals()['event'] = event

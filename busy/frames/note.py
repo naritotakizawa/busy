@@ -13,9 +13,8 @@ class EditorNoteBook(ttk.Notebook):
         super().__init__(master, *args, **kwargs)
         self.editor_list = []
 
-    def add_tab(self, path=None):
+    def add_tab(self, event=None, path=None):
         """新しいタブを追加する."""
-
         # エディタの作成
         editor = EditorFrame(self, path)
 
@@ -39,7 +38,7 @@ class EditorNoteBook(ttk.Notebook):
         now_open_tab = self.tabs()[-1]
         self.select(now_open_tab)
 
-    def save_file(self, event):
+    def save_file(self, event=None):
         """開いているエディタの内容を保存する."""
         # 現在開いているエディタと、中身を取得
         current_editor, index = self.get_current_editor()
@@ -67,11 +66,12 @@ class EditorNoteBook(ttk.Notebook):
                 text='save {0}'.format(current_editor.path)
             )
 
-    def delete_tab(self, event):
+    def delete_tab(self, event=None):
         """選択中のタブを削除する."""
-        current_editor_id, index = self.get_current_editor()
-        self.forget(current_editor_id)
-        self.editor_list.pop(index)
+        if self.tabs():
+            current_editor_id, index = self.get_current_editor()
+            self.forget(current_editor_id)
+            self.editor_list.pop(index)
 
     def get_current_editor(self):
         """選択中のタブIDと、indexを返す."""
@@ -80,15 +80,23 @@ class EditorNoteBook(ttk.Notebook):
         index = self.index(self.select())
         return self.editor_list[index], index
 
+    def open_file(self, event=None, file_path=None):
+        """ファイルを開く."""
+        if file_path is None:
+            file_path = filedialog.askopenfilename()
+        if file_path:
+            self.add_tab(path=file_path)
+
 
 if __name__ == '__main__':
     root = tk.Tk()
     app = EditorNoteBook(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
-    root.bind('<Control-KeyPress-s>', mediator.event.save_file)
-    root.bind('<Control-KeyPress-d>', mediator.event.delete_tab)
-    root.bind('<Control-KeyPress-n>', mediator.event.new_file)
-    root.bind('<Control-KeyPress-o>', mediator.event.open_file)
+    root.bind('<Control-KeyPress-s>', app.save_file)
+    root.bind('<Control-KeyPress-d>', app.delete_tab)
+    root.bind('<Control-KeyPress-n>', app.add_tab)
+    root.bind('<Control-KeyPress-o>', app.open_file)
+    app.add_tab()  # 新規ファイルを開いておこう
     root.columnconfigure(0, weight=1, minsize=100)
     root.rowconfigure(0, weight=1, minsize=100)
     root.mainloop()
