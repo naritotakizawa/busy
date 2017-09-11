@@ -87,18 +87,24 @@ class EditorFrame(ttk.Frame):
 
     def create_event(self):
         """イベントの設定."""
+        # テキスト内でのスクロール時
+        self.text.bind('<<Scroll>>', self.update_line_number)
+
+        # タブ押下時
+        self.text.bind('<Tab>', self.tab)
+
+        # エンター押下時
+        self.text.bind('<Return>', self.indent)
+
+        # バックスペース押下時
+        self.text.bind('<BackSpace>', self.back_space)
+
         # テキストの変更時
         self.text.bind('<<Change>>', self.update_line_number)
         self.text.bind('<<Change>>', self.highlight, '+')
 
-        # テキスト内でのスクロール時
-        self.text.bind('<<Scroll>>', self.update_line_number)
-
         # ウィジェットのサイズが変わった際。行番号の描画を行う
         self.text.bind('<Configure>', self.update_line_number)
-
-        # タブ押下時
-        self.text.bind('<Tab>', self.tab)
 
     def update_line_number(self, event):
         """行番号の描画."""
@@ -110,7 +116,7 @@ class EditorFrame(ttk.Frame):
         first_row_number = int(first_row.split('.')[0])
 
         # エディタの最終行
-        last_row = self.text.index(tk.END)
+        last_row = self.text.index('end')
         last_row_number = int(last_row.split('.')[0])
 
         for row_number in range(first_row_number, last_row_number):
@@ -135,6 +141,17 @@ class EditorFrame(ttk.Frame):
         """エディタの内容を返す."""
         return self.text.get('1.0', 'end-1c')
 
+    def get_line_text(self, relative_index=0):
+        """カーソルがある行を起点に、行のテキストを返す."""
+        if relative_index >= 0:
+            start = 'insert linestart +{} line'.format(relative_index)
+            end = 'insert lineend + {} line'.format(relative_index)
+        else:
+            start = 'insert linestart -{} line'.format(relative_index)
+            end = 'insert lineend -{} line'.format(relative_index)
+        line_text = self.text.get(start, end)
+        return line_text
+
     def lint(self):
         """コードのスタイルガイドチェック."""
         return self.code_style.lint()
@@ -146,6 +163,14 @@ class EditorFrame(ttk.Frame):
     def highlight(self, event):
         """テキストをハイライトする."""
         return self.code_style.highlight()
+
+    def indent(self, event):
+        """エンター時のインデントを調節する."""
+        return self.code_style.indent()
+
+    def back_space(self, event):
+        """バックスペース時に、インデントがあれば上手く消す."""
+        return self.code_style.back_space()
 
 
 if __name__ == '__main__':

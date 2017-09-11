@@ -40,9 +40,19 @@ class NoneCodeStyle:
         """文字をハイライトする."""
         pass
 
+    def indent(self):
+        """エディタでのエンター押下時にインデントを調整する."""
+        pass
+
+    def back_space(self):
+        """バックスペース時に、インデントがあれば上手く消す."""
+        pass
+
 
 class PythonCodeStyle(NoneCodeStyle):
     """Pythonのエディタスタイル."""
+
+    one_indent = ' ' * 4
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -112,6 +122,43 @@ class PythonCodeStyle(NoneCodeStyle):
             )
             self.text.tag_add(str(token), 'range_start', 'range_end')
             self.text.mark_set('range_start', 'range_end')
+
+    def get_space_num(self, text):
+        """indentメソッドのヘルパー関数。先頭に何個スペースがあるかを返す."""
+        space_num = 0
+        for char in text:
+            # 半角スペース以外の文字が出る前数える
+            if char != ' ':
+                return space_num
+            space_num += 1
+
+        # 半角スペースしかなければ、空行として処理。今のところは0を返す
+        return 0
+
+    def indent(self):
+        """エディタでのエンター押下時にインデントを調整する."""
+        current_line_text = self.editor.get_line_text()  # 現在行のテキスト
+        space_num = self.get_space_num(current_line_text)  # 半角スペースの数
+        origin_indent = ' ' * space_num  # その行のインデント
+
+        # { [ ( : の場合、元々のインデントに一つインデントを足して字下げ
+        if current_line_text and current_line_text[-1] in (':', '(', '[', '{'):
+            insert_text = '\n' + origin_indent + self.one_indent
+
+        # それ以外ならば、元々のインデントに合わせる
+        else:
+            insert_text = '\n' + origin_indent
+
+        self.text.insert('insert', insert_text)
+        return 'break'
+
+    def back_space(self):
+        """バックスペース時に、インデントがあれば上手く消す."""
+        current_line_text = self.editor.get_line_text()  # 現在行のテキスト
+        # カーソルの前にスペースが4つ(1インデント)あれば、4つまとめて消す
+        if current_line_text and current_line_text[-4:] == ' ' * 4:
+            self.text.delete('insert -4c', 'insert')
+            return 'break'
 
 
 def get_code_style(editor_frame, path=None):
