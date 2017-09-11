@@ -141,14 +141,12 @@ class EditorFrame(ttk.Frame):
         """エディタの内容を返す."""
         return self.text.get('1.0', 'end-1c')
 
-    def get_line_text(self, relative_index=0):
-        """カーソルがある行を起点に、行のテキストを返す."""
-        if relative_index >= 0:
-            start = 'insert linestart +{} line'.format(relative_index)
-            end = 'insert lineend + {} line'.format(relative_index)
-        else:
-            start = 'insert linestart -{} line'.format(relative_index)
-            end = 'insert lineend -{} line'.format(relative_index)
+    def get_line_text(self, until_cursor=False):
+        """現在の行のテキストを返す."""
+        start = 'insert linestart'
+        end = 'insert'
+        if not until_cursor:
+            end += ' lineend'
         line_text = self.text.get(start, end)
         return line_text
 

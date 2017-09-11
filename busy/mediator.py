@@ -17,6 +17,7 @@ class MockMediator:
     本来他ウィジェットと連携する予定の処理が呼ばれてもエラーにならず、その処理が呼ばれたことを出力します。
 
     """
+
     def __getattr__(self, name):
         """呼ばれたメソッド名と引数を出力する."""
         def inner(*args, **kwargs):
@@ -28,14 +29,17 @@ class EventMediator:
     """遠く離れたウィジェット間でのやりとりを仲介するデフォルトのクラス."""
 
     def __init__(self, main_frame, info_frame, path_frame, note_frame):
+        """各フレームの参照を保持する."""
         self.main_frame = main_frame
         self.info_frame = info_frame
         self.path_frame = path_frame
         self.note_frame = note_frame
 
-    def save_file(self, event=None):
+    def save_file(self, event=None, initial_dir=None):
         """ファイルの保存."""
-        self.note_frame.save_file(event=event)
+        if initial_dir is None:
+            initial_dir = self.path_frame.root_path
+        self.note_frame.save_file(event=event, initial_dir=initial_dir)
 
     def delete_tab(self, event=None):
         """タブの削除."""
@@ -45,9 +49,13 @@ class EventMediator:
         """新規ファイルを開く."""
         self.note_frame.add_tab(event=event)
 
-    def open_file(self, event=None, file_path=None):
+    def open_file(self, event=None, file_path=None, initial_dir=None):
         """ファイルを開く."""
-        self.note_frame.open_file(event=event, file_path=file_path)
+        if initial_dir is None:
+            initial_dir = self.path_frame.root_path
+        self.note_frame.open_file(
+            event=event, file_path=file_path, initial_dir=initial_dir
+        )
 
     def add_history(self, text):
         """履歴にテキストを追加する."""
@@ -73,11 +81,20 @@ class EventMediator:
         """スタイルチェック欄を更新する."""
         self.info_frame.update_lint(text)
 
+    def update_dir(self, event=None):
+        """ツリーのディレクトリを更新する."""
+        self.path_frame.update_dir(event=None)
+
+    def change_dir(self, event=None):
+        """ツリーのルートディレクトリを変更する."""
+        self.path_frame.change_dir(event=None)
+
 
 event = MockMediator()
 
 
 # Todo settings.py等で、具象メディエーターを設定できるようにしたい
 def set_mediator(*widgets, default_mediator_cls=EventMediator):
+    """メディエーターを設定する."""
     event = default_mediator_cls(*widgets)
     globals()['event'] = event

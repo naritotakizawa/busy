@@ -137,7 +137,10 @@ class PythonCodeStyle(NoneCodeStyle):
 
     def indent(self):
         """エディタでのエンター押下時にインデントを調整する."""
-        current_line_text = self.editor.get_line_text()  # 現在行のテキスト
+        # カーソルがある位置までの、行のテキスト
+        current_line_text = self.editor.get_line_text(
+            until_cursor=True
+        )
         space_num = self.get_space_num(current_line_text)  # 半角スペースの数
         origin_indent = ' ' * space_num  # その行のインデント
 
@@ -154,7 +157,9 @@ class PythonCodeStyle(NoneCodeStyle):
 
     def back_space(self):
         """バックスペース時に、インデントがあれば上手く消す."""
-        current_line_text = self.editor.get_line_text()  # 現在行のテキスト
+        current_line_text = self.editor.get_line_text(
+            until_cursor=True
+        )
         # カーソルの前にスペースが4つ(1インデント)あれば、4つまとめて消す
         if current_line_text and current_line_text[-4:] == ' ' * 4:
             self.text.delete('insert -4c', 'insert')

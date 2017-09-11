@@ -42,6 +42,8 @@ class Busy(ttk.Frame):
         self.master.bind('<Control-KeyPress-d>', mediator.event.delete_tab)
         self.master.bind('<Control-KeyPress-n>', mediator.event.new_file)
         self.master.bind('<Control-KeyPress-o>', mediator.event.open_file)
+        self.master.bind('<F4>', mediator.event.change_dir)
+        self.master.bind('<F5>', mediator.event.update_dir)
 
 
 def main():

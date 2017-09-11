@@ -2,6 +2,7 @@
 import os
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import filedialog
 
 from busy import mediator
 
@@ -101,12 +102,25 @@ class PathTreeFrame(ttk.Frame):
             if os.path.isfile(abspath):
                 mediator.event.open_file(file_path=abspath)
 
+    def update_dir(self, event=None):
+        """ツリーの一覧を更新する."""
+        self.create_widgets()
+
+    def change_dir(self, event=None):
+        """ツリーのルートディレクトリを変更する."""
+        dir_name = filedialog.askdirectory()
+        if dir_name:
+            self.root_path = dir_name
+            self.create_widgets()
+
 
 if __name__ == '__main__':
     root = tk.Tk()
     root.title('Path Tree')
     app = PathTreeFrame(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+    root.bind('<F4>', app.change_dir)
+    root.bind('<F5>', app.update_dir)
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
     root.mainloop()

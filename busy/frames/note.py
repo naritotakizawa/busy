@@ -38,15 +38,18 @@ class EditorNoteBook(ttk.Notebook):
         now_open_tab = self.tabs()[-1]
         self.select(now_open_tab)
 
-    def save_file(self, event=None):
+    def save_file(self, event=None, initial_dir=os.curdir):
         """開いているエディタの内容を保存する."""
+        # そもそもタブを開いてなければ処理しない
+        if not self.tabs():
+            return 'break'
         # 現在開いているエディタと、中身を取得
         current_editor, index = self.get_current_editor()
         src = current_editor.get_src()
 
         # 新規ファイルだった場合は、ファイル名を指定させて保存
         if current_editor.path is None:
-            file = filedialog.asksaveasfile(mode='w')
+            file = filedialog.asksaveasfile(mode='w', initialdir=initial_dir)
             if file:
                 file.write(src)
                 current_editor.path = file.name
@@ -68,10 +71,12 @@ class EditorNoteBook(ttk.Notebook):
 
     def delete_tab(self, event=None):
         """選択中のタブを削除する."""
-        if self.tabs():
-            current_editor_id, index = self.get_current_editor()
-            self.forget(current_editor_id)
-            self.editor_list.pop(index)
+        # そもそもタブを開いてなければ処理しない
+        if not self.tabs():
+            return 'break'
+        current_editor_id, index = self.get_current_editor()
+        self.forget(current_editor_id)
+        self.editor_list.pop(index)
 
     def get_current_editor(self):
         """選択中のタブIDと、indexを返す."""
@@ -80,10 +85,10 @@ class EditorNoteBook(ttk.Notebook):
         index = self.index(self.select())
         return self.editor_list[index], index
 
-    def open_file(self, event=None, file_path=None):
+    def open_file(self, event=None, file_path=None, initial_dir=os.curdir):
         """ファイルを開く."""
         if file_path is None:
-            file_path = filedialog.askopenfilename()
+            file_path = filedialog.askopenfilename(initialdir=initial_dir)
         if file_path:
             self.add_tab(path=file_path)
 
