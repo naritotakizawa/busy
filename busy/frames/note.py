@@ -27,6 +27,7 @@ class EditorNoteBook(ttk.Notebook):
             name = os.path.basename(path)
             with open(path, 'r', encoding='utf-8') as file:
                 editor.text.insert(tk.INSERT, file.read())
+                editor.all_highlight()
 
         # NoteBookにエディタを追加
         self.add(editor, text=name)

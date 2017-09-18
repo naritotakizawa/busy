@@ -23,8 +23,7 @@ class CustomText(tk.Text):
                     event generate  $widget <<Scroll>> -when tail
                 }
 
-                if {([lindex $args 0] in {insert replace delete}) ||
-                    ([lrange $args 0 2] == {mark set insert})} {
+                if {([lindex $args 0] in {insert replace delete})} {
 
                     event generate  $widget <<Change>> -when tail
                 }
@@ -90,18 +89,24 @@ class EditorFrame(ttk.Frame):
         # テキスト内でのスクロール時
         self.text.bind('<<Scroll>>', self.update_line_number)
 
-        # タブ押下時
-        self.text.bind('<Tab>', self.tab)
+        # テキストの変更時
+        self.text.bind('<<Change>>', self.line_highlight)
+        self.text.bind('<<Change>>', self.update_line_number, '+')
+
+        self.text.bind('<Tab>', self.indent)  # タブ押下時(インデント)
+        self.text.bind('<Control-b>', self.dedent)  # Ctrl+B押下時(逆インデント)
 
         # エンター押下時
-        self.text.bind('<Return>', self.indent)
+        self.text.bind('<Return>', self.enter_indent)
 
         # バックスペース押下時
         self.text.bind('<BackSpace>', self.back_space)
 
-        # テキストの変更時
-        self.text.bind('<<Change>>', self.update_line_number)
-        self.text.bind('<<Change>>', self.highlight, '+')
+        # Ctrl+A押下時(全選択)
+        self.text.bind('<Control-a>', self.select_all)
+
+        # Ctrl+L押下時、全行ハイライト
+        self.text.bind("<Control-l>", self.all_highlight)
 
         # ウィジェットのサイズが変わった際。行番号の描画を行う
         self.text.bind('<Configure>', self.update_line_number)
@@ -141,30 +146,61 @@ class EditorFrame(ttk.Frame):
         """エディタの内容を返す."""
         return self.text.get('1.0', 'end-1c')
 
-    def get_line_text(self, until_cursor=False):
+    def get_line_text(self):
         """現在の行のテキストを返す."""
-        start = 'insert linestart'
-        end = 'insert'
-        if not until_cursor:
-            end += ' lineend'
-        line_text = self.text.get(start, end)
-        return line_text
+        return self.text.get('insert linestart', 'insert lineend')
+
+    def get_line_text_before_cursor(self):
+        """カーソルまでの現在の行のテキストを返す."""
+        return self.text.get('insert linestart', 'insert')
+
+    def get_line_number(self):
+        """現在の行番号、列番号を整数で返す."""
+        pos = self.text.index('insert')
+        row, col = [int(x) for x in pos.split('.')]
+        return row, col
+
+    def get_selection_indices(self):
+        """選択部分の始まりと終わりの行番号を返す."""
+        try:
+            # 7.5 10.5 のように取得される
+            first = self.text.index('sel.first')
+            last = self.text.index('sel.last')
+            # 7と10の部分を抜き出す
+            first_row_number = int(first.split('.')[0])
+            last_row_number = int(last.split('.')[0])
+            return first_row_number, last_row_number
+        except tk.TclError:
+            return None, None
+
+    def select_all(self, event):
+        """テキストを全て選択する."""
+        self.text.tag_add('sel', '1.0', 'end')
+        return 'break'
 
     def lint(self):
         """コードのスタイルガイドチェック."""
         return self.code_style.lint()
 
-    def tab(self, event):
-        """タブキー押下時(半角スペすに変えたり)."""
-        return self.code_style.tab()
-
-    def highlight(self, event):
-        """テキストをハイライトする."""
-        return self.code_style.highlight()
-
     def indent(self, event):
-        """エンター時のインデントを調節する."""
+        """タブキー押下時(インデント)."""
         return self.code_style.indent()
+
+    def dedent(self, event):
+        """Ctrl+B 逆インデント."""
+        return self.code_style.dedent()
+
+    def line_highlight(self, event):
+        """現在行をハイライトする."""
+        return self.code_style.line_highlight()
+
+    def all_highlight(self, event=None):
+        """全行をハイライトする."""
+        return self.code_style.all_highlight()
+
+    def enter_indent(self, event):
+        """エンター時のインデントを調節する."""
+        return self.code_style.enter_indent()
 
     def back_space(self, event):
         """バックスペース時に、インデントがあれば上手く消す."""
