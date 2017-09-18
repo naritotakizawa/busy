@@ -51,7 +51,8 @@ class BaseCodeStyle:
         if first and last:
             for row in range(first, last+1):
                 # 各行のテキスト
-                current_line_text = self.text.get('{0}.0'.format(row), '{0}.end'.format(row))
+                current_line_text = self.text.get(
+                    '{0}.0'.format(row), '{0}.end'.format(row))
 
                 # 各行の最初がインデントならば、それを消す
                 indent_range_text = current_line_text[:self.indent_length]
@@ -73,7 +74,8 @@ class BaseCodeStyle:
         # カーソル位置の前の部分がインデントならば、インデント毎消す
         indent_range_text = current_line_text[col-self.indent_length:col]
         if indent_range_text == self.one_indent:
-            self.text.delete('insert -{0}c'.format(self.indent_length), 'insert')
+            self.text.delete(
+                'insert -{0}c'.format(self.indent_length), 'insert')
             return 'break'
 
     def get_indent_num(self, text):
@@ -128,38 +130,60 @@ class PythonCodeStyle(BaseCodeStyle):
         self.create_text_tag()
 
     def create_text_tag(self):
-        self.text.tag_configure('Token.Keyword', foreground='#CC7A00')
-        self.text.tag_configure('Token.Keyword.Constant', foreground='#CC7A00')
+        """タグの定義."""
+        # 黄色く表示する
         self.text.tag_configure(
-            'Token.Keyword.Declaration', foreground='#CC7A00')
+            'Token.Keyword', foreground='#CC7A00'
+        )  # def class if for else return pass with try except finally print
         self.text.tag_configure(
-            'Token.Keyword.Namespace', foreground='#CC7A00')
-        self.text.tag_configure('Token.Keyword.Pseudo', foreground='#CC7A00')
-        self.text.tag_configure('Token.Keyword.Reserved', foreground='#CC7A00')
-        self.text.tag_configure('Token.Keyword.Type', foreground='#CC7A00')
+            'Token.Keyword.Namespace', foreground='#CC7A00')  # from import
+        self.text.tag_configure(
+            'Token.Name.Decorator', foreground='#CC7A00')  # @deco
+        self.text.tag_configure(
+            'Token.Operator.Word', foreground='#CC7A00')  # and, in
 
-        self.text.tag_configure('Token.Name.Class', foreground='#003D99')
-        self.text.tag_configure('Token.Name.Exception', foreground='#003D99')
-        self.text.tag_configure('Token.Name.Function', foreground='#003D99')
+        # 青く表示する
         self.text.tag_configure(
-            'Token.Name.Function.Magic', foreground='#003D99')
+            'Token.Name.Namespace', foreground='#003D99'
+        )  # import a のa
         self.text.tag_configure(
-            'Token.Name.Builtin.Pseudo', foreground='#003D99')
-        self.text.tag_configure('Token.Name.Decorator', foreground='#003D99')
+            'Token.Name.Class', foreground='#003D99')  # クラス名
         self.text.tag_configure(
-            'Token.Name.Variable.Magic', foreground='#003D99')
+            'Token.Name.Exception', foreground='#003D99')  # エラー名
+        self.text.tag_configure(
+            'Token.Name.Function', foreground='#003D99')  # 関数名
+        self.text.tag_configure(
+            'Token.Name.Function.Magic', foreground='#003D99')  # __init__
+        self.text.tag_configure(
+            'Token.Name.Builtin', foreground='#003D99'
+        )  # len range input enumerate dir
+        self.text.tag_configure(
+            'Token.Name.Builtin.Pseudo', foreground='#003D99')  # self cls
 
-        self.text.tag_configure('Token.Operator', foreground='#CC7A00')
-        self.text.tag_configure('Token.Operator.Word', foreground='#CC7A00')
+        # 緑表示する
+        self.text.tag_configure(
+            'Token.Literal.String.Doc', foreground='#248F24'  # """docstring"""
+        )
+        self.text.tag_configure(
+            'Token.Literal.String.Double', foreground='#248F24')  # "文字"
+        self.text.tag_configure(
+            'Token.Literal.String.Single', foreground='#248F24')  # '文字'
 
+        # 赤表示する
         self.text.tag_configure(
-            'Token.Literal.String.Doc', foreground='#B80000')
-        self.text.tag_configure('Token.Comment.Single', foreground='#B80000')
+            'Token.Comment.Single', foreground='#dc143c')  # #コメント
+        self.text.tag_configure(
+            'Token.Literal.Number.Integer', foreground='#dc143c')  # 1 2 数字
+        self.text.tag_configure(
+            'Token.Literal.String.Escape', foreground='#dc143c')  # \t \n
+        self.text.tag_configure(
+            'Token.Operator', foreground='#dc143c')  # . + - / * == =
 
+        # 黒く表示
         self.text.tag_configure(
-            'Token.Literal.String.Double', foreground='#248F24')
+            'Token.Punctuation', foreground='#000000')  # : [] () {} ,
         self.text.tag_configure(
-            'Token.Literal.String.Single', foreground='#248F24')
+            'Token.Name', foreground='#000000')  # 変数名など
 
     def lint(self):
         """スタイルガイドのチェックを行う."""
@@ -192,7 +216,7 @@ class PythonCodeStyle(BaseCodeStyle):
         row, col = self.editor.get_line_number()
         start = '{0}.0'.format(row)
         current_line_text = self.editor.get_line_text()
-    
+
         # その行のハイライトを一度解除する
         for tag in self.text.tag_names():
             self.text.tag_remove(tag, start, start+' lineend')
