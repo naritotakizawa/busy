@@ -65,7 +65,7 @@ class EditorFrame(ttk.Frame):
     def create_widgets(self):
         # 入力欄、行番号欄、スクロール部分を作成
         self.text = CustomText(self, font=('Helvetica', 14))
-        self.linenumbers = tk.Canvas(self, width=30)
+        self.linenumbers = tk.Canvas(self, width=40)
         self.vsb = ttk.Scrollbar(
             self, orient=tk.VERTICAL, command=self.text.yview)
 
@@ -126,6 +126,7 @@ class EditorFrame(ttk.Frame):
 
         for row_number in range(first_row_number, last_row_number):
             # 各行の座標等のデータを取得
+            # (3, 705, 197, 13, 18) のように帰る(x,y,width,height,baseline)
             dline = self.text.dlineinfo('{0}.0'.format(row_number))
 
             # 下にスクロールしたあと、上にスクロールした場合なんかはdlineがNoneの可能性あり
@@ -140,7 +141,7 @@ class EditorFrame(ttk.Frame):
 
             # (x座標, y座標, 方向, 表示テキスト)を渡して行番号のテキストを作成
             self.linenumbers.create_text(
-                0, y, anchor=tk.NW, text=row_number, font=('Helvetica', 14))
+                3, y, anchor=tk.NW, text=row_number, font=('Helvetica', 14))
 
     def get_src(self):
         """エディタの内容を返す."""

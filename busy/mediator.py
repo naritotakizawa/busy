@@ -83,11 +83,43 @@ class EventMediator:
 
     def update_dir(self, event=None):
         """ツリーのディレクトリを更新する."""
-        self.path_frame.update_dir(event=None)
+        self.path_frame.update_dir(event=event)
 
     def change_dir(self, event=None):
         """ツリーのルートディレクトリを変更する."""
-        self.path_frame.change_dir(event=None)
+        self.path_frame.change_dir(event=event)
+
+    def indent(self, event=None):
+        """インデント."""
+        # 開いているエディタがなければ処理しない
+        if not self.note_frame.tabs():
+            return 'break'
+        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor.indent(event=event)
+
+    def dedent(self, event=None):
+        """逆インデント."""
+        # 開いているエディタがなければ処理しない
+        if not self.note_frame.tabs():
+            return 'break'
+        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor.dedent(event=event)
+
+    def highlight(self, event=None):
+        """ハイライト."""
+        # 開いているエディタがなければ処理しない
+        if not self.note_frame.tabs():
+            return 'break'
+        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor.all_highlight(event=event)
+
+    def select_all(self, event=None):
+        """テキスト全選択."""
+        # 開いているエディタがなければ処理しない
+        if not self.note_frame.tabs():
+            return 'break'
+        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor.select_all(event=event)
 
 
 event = MockMediator()

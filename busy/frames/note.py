@@ -45,7 +45,7 @@ class EditorNoteBook(ttk.Notebook):
         if not self.tabs():
             return 'break'
         # 現在開いているエディタと、中身を取得
-        current_editor, index = self.get_current_editor()
+        current_editor, _ = self.get_current_editor()
         src = current_editor.get_src()
 
         # 新規ファイルだった場合は、ファイル名を指定させて保存

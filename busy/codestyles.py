@@ -161,20 +161,20 @@ class PythonCodeStyle(BaseCodeStyle):
         self.text.tag_configure(
             'Token.Literal.String.Single', foreground='#248F24')
 
-        def lint(self):
-            """スタイルガイドのチェックを行う."""
-            if self.editor.path:
-                output = ''
-                with stdout_io() as stdout:
-                    error = ''
-                    try:
-                        style_guide = flake8.get_style_guide()
-                        style_guide.check_files([self.editor.path])
-                    except:
-                        error = traceback.format_exc()
-                    finally:
-                        output = stdout.getvalue() + error
-                mediator.event.update_lint(text=output)
+    def lint(self):
+        """スタイルガイドのチェックを行う."""
+        if self.editor.path:
+            output = ''
+            with stdout_io() as stdout:
+                error = ''
+                try:
+                    style_guide = flake8.get_style_guide()
+                    style_guide.check_files([self.editor.path])
+                except:
+                    error = traceback.format_exc()
+                finally:
+                    output = stdout.getvalue() + error
+            mediator.event.update_lint(text=output)
 
     def _highlight(self, start_pos, text):
         """テキストをハイライトする."""
