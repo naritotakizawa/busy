@@ -21,14 +21,12 @@ Install
     busy
 
 
-App Shortcut Key
+File Shortcut Key
 ===========
 :Ctrl+N: 新規ファイル
 :Ctrl+O: ファイルを開く
 :Ctrl+D: 現在のタブを閉じる
 :Ctrl+S: ファイルを保存・更新する
-:F4: ツリーのルートディレクトリ変更
-:F5: ディレクトリツリーの更新
 
 
 Editor Shortcut Key
@@ -41,3 +39,9 @@ Editor Shortcut Key
 :Ctrl+C: コピー
 :Ctrl+X: 切り取り
 :Ctrl+V: 貼り付け
+
+
+Tree Shortcut Key
+===========
+:F4: ツリーのルートディレクトリ変更
+:F5: ディレクトリツリーの更新
