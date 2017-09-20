@@ -5,12 +5,12 @@ busy
 tkinterで作成したPythonエディタ
 
 Requirement
-===========
+==========
 :Python: 3.5以上
 
 
 Install
-===========
+=====
 1. pipでインストールする ::
 
     pip install -U https://github.com/naritotakizawa/busy/archive/master.tar.gz
@@ -22,7 +22,7 @@ Install
 
 
 File Shortcut Key
-===========
+=============
 :Ctrl+N: 新規ファイル
 :Ctrl+O: ファイルを開く
 :Ctrl+D: 現在のタブを閉じる
@@ -30,7 +30,7 @@ File Shortcut Key
 
 
 Editor Shortcut Key
-===========
+===============
 :Enter: 改行する。適切にインデントを行って改行します。
 :Tab: インデントする。選択してれば範囲インデント
 :Ctrl+B: 範囲を逆インデントする
@@ -42,6 +42,12 @@ Editor Shortcut Key
 
 
 Tree Shortcut Key
-===========
+==============
 :F4: ツリーのルートディレクトリ変更
 :F5: ディレクトリツリーの更新
+
+
+エディタ対応ファイル
+===============
+:.html: HTMLファイル
+:.python: Pythoファイル
