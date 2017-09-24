@@ -193,6 +193,7 @@ class EditorFrame(ttk.Frame):
         window.title('Search')
         box = SearchBox(window, self.text)
         box.pack()
+        return 'break'
 
     def create_replace_box(self, event):
         """テキスト置換ボックスの作成."""
@@ -200,6 +201,7 @@ class EditorFrame(ttk.Frame):
         window.title('Replace')
         box = ReplaceBox(window, self.text)
         box.pack()
+        return 'break'
 
     def lint(self):
         """コードのスタイルガイドチェック."""
