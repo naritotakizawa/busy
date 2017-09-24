@@ -121,6 +121,22 @@ class EventMediator:
         current_editor, _ = self.note_frame.get_current_editor()
         current_editor.select_all(event=event)
 
+    def search(self, event=None):
+        """テキスト検索."""
+        # 開いているエディタがなければ処理しない
+        if not self.note_frame.tabs():
+            return 'break'
+        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor.create_search_box(event=event)
+
+    def replace(self, event=None):
+        """テキスト置換."""
+        # 開いているエディタがなければ処理しない
+        if not self.note_frame.tabs():
+            return 'break'
+        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor.create_replace_box(event=event)
+
 
 event = MockMediator()
 

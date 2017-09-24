@@ -32,14 +32,16 @@ File Shortcut Key
 Editor Shortcut Key
 ===============
 :Enter: 改行する。適切にインデントを行って改行します。
-:Tab: インデントする。選択してれば範囲インデント
-:Ctrl+B: 範囲を逆インデントする
+:Tab: タブ。又は、Pythonならば半角スペース4、htmlならば半角スペース2
+:Ctrl+]: 範囲インデント
+:Ctrl+[: 範囲を逆インデントする
 :Ctrl+A: テキストを全て選択
 :Ctrl+L: テキストを全てハイライトし直す
 :Ctrl+C: コピー
 :Ctrl+X: 切り取り
 :Ctrl+V: 貼り付け
-
+:Ctrl+F: 検索
+:Ctrl+H: 置換
 
 Tree Shortcut Key
 ==============

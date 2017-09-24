@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from busy.codestyles import get_code_style
+from busy.frames import SearchBox, ReplaceBox
 
 
 class CustomText(tk.Text):
@@ -93,8 +94,9 @@ class EditorFrame(ttk.Frame):
         self.text.bind('<<Change>>', self.line_highlight)
         self.text.bind('<<Change>>', self.update_line_number, '+')
 
-        self.text.bind('<Tab>', self.indent)  # タブ押下時(インデント)
-        self.text.bind('<Control-b>', self.dedent)  # Ctrl+B押下時(逆インデント)
+        self.text.bind('<Tab>', self.indent)  # Tab押下時(インデント)
+        self.text.bind('<Control-Key-bracketright>', self.indent)  # Ctrl+]押下時(インデント)
+        self.text.bind('<Control-Key-bracketleft>', self.dedent)  # Ctrl+[押下時(逆インデント)
 
         # エンター押下時
         self.text.bind('<Return>', self.enter_indent)
@@ -111,7 +113,13 @@ class EditorFrame(ttk.Frame):
         # ウィジェットのサイズが変わった際。行番号の描画を行う
         self.text.bind('<Configure>', self.update_line_number)
 
-    def update_line_number(self, event):
+        # Ctrl+Fで検索ボックス
+        self.text.bind('<Control-f>', self.create_search_box)
+
+        # Ctrl+Fで検索ボックス
+        self.text.bind('<Control-h>', self.create_replace_box)
+
+    def update_line_number(self, event=None):
         """行番号の描画."""
         # 現在の行番号を全て消す
         self.linenumbers.delete(tk.ALL)
@@ -174,24 +182,38 @@ class EditorFrame(ttk.Frame):
         except tk.TclError:
             return None, None
 
-    def select_all(self, event):
+    def select_all(self, event=None):
         """テキストを全て選択する."""
         self.text.tag_add('sel', '1.0', 'end')
         return 'break'
+
+    def create_search_box(self, event):
+        """テキスト検索ボックスの作成."""
+        window = tk.Toplevel(self)
+        window.title('Search')
+        box = SearchBox(window, self.text)
+        box.pack()
+
+    def create_replace_box(self, event):
+        """テキスト置換ボックスの作成."""
+        window = tk.Toplevel(self)
+        window.title('Replace')
+        box = ReplaceBox(window, self.text)
+        box.pack()
 
     def lint(self):
         """コードのスタイルガイドチェック."""
         return self.code_style.lint()
 
-    def indent(self, event):
+    def indent(self, event=None):
         """タブキー押下時(インデント)."""
         return self.code_style.indent()
 
-    def dedent(self, event):
+    def dedent(self, event=None):
         """Ctrl+B 逆インデント."""
         return self.code_style.dedent()
 
-    def line_highlight(self, event):
+    def line_highlight(self, event=None):
         """現在行をハイライトする."""
         return self.code_style.line_highlight()
 
@@ -199,11 +221,11 @@ class EditorFrame(ttk.Frame):
         """全行をハイライトする."""
         return self.code_style.all_highlight()
 
-    def enter_indent(self, event):
+    def enter_indent(self, event=None):
         """エンター時のインデントを調節する."""
         return self.code_style.enter_indent()
 
-    def back_space(self, event):
+    def back_space(self, event=None):
         """バックスペース時に、インデントがあれば上手く消す."""
         return self.code_style.back_space()
 

@@ -45,19 +45,28 @@ class BaseCodeStyle:
         return 'break'
 
     def back_space(self):
-        """バックスペース時に、インデントがあれば上手く消す."""
-        # カーソル位置までの行テキスト
-        current_line_text = self.editor.get_line_text_before_cursor()
+        """バックスペース時の動作.
 
-        # カーソルの列番号(何文字めにカーソルがあるか)を取得
-        _, col = self.editor.get_line_number()
+        範囲選択されていれば、単純に消去する
+        そうでなければ、インデントがあれば上手く消す
 
-        # カーソル位置の前の部分がインデントならば、インデント毎消す
-        indent_range_text = current_line_text[col-self.indent_length:col]
-        if indent_range_text == self.one_indent:
-            self.text.delete(
-                'insert -{0}c'.format(self.indent_length), 'insert')
-            return 'break'
+        """
+        first, last = self.editor.get_selection_indices()
+        if first and last:
+            pass  # 範囲選択されていれば、デフォルトの動作(全消去)
+        else:
+            # カーソル位置までの行テキスト
+            current_line_text = self.editor.get_line_text_before_cursor()
+
+            # カーソルの列番号(何文字めにカーソルがあるか)を取得
+            _, col = self.editor.get_line_number()
+
+            # カーソル位置の前の部分がインデントならば、インデント毎消す
+            indent_range_text = current_line_text[col-self.indent_length:col]
+            if indent_range_text == self.one_indent:
+                self.text.delete(
+                    'insert -{0}c'.format(self.indent_length), 'insert')
+                return 'break'
 
     def get_indent_num(self, text):
         """先頭に何個インデントがあるかを返す.

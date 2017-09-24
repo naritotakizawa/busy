@@ -30,10 +30,12 @@ class EditorMenu(tk.Menu):
     def create_edit_menu(self):
         """Editメニューの作成(エディタの機能)."""
         menu_edit = tk.Menu(self)
-        menu_edit.add_command(label='Indent', command=mediator.event.indent, accelerator='Tab')
-        menu_edit.add_command(label='Dedent', command=mediator.event.dedent, accelerator='Ctrl+B')
+        menu_edit.add_command(label='Indent', command=mediator.event.indent, accelerator='Ctrl+]')
+        menu_edit.add_command(label='Dedent', command=mediator.event.dedent, accelerator='Ctrl+[')
         menu_edit.add_command(label='Select All', command=mediator.event.select_all, accelerator='Ctrl+A')
         menu_edit.add_command(label='HighLight', command=mediator.event.highlight, accelerator='Ctrl+L')
+        menu_edit.add_command(label='Search', command=mediator.event.search, accelerator='Ctrl+F')
+        menu_edit.add_command(label='Replace', command=mediator.event.replace, accelerator='Ctrl+H')
         self.add_cascade(menu=menu_edit, label='Edit')
 
     def create_tree_menu(self):
