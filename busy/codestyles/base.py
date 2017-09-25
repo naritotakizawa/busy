@@ -8,12 +8,17 @@ class BaseCodeStyle:
     next_is_indent = ['(', '{', '[']  # これらの後にエンターを押すと、次行はインデント一つたされる
 
     def __init__(self, editor_frame):
+        """初期化."""
         self.editor = editor_frame
         self.text = editor_frame.text
         self.indent_length = len(self.one_indent)
 
+    def tab(self):
+        """タブキー."""
+        return self.indent()
+
     def indent(self):
-        """タブキー押下時、インデント."""
+        """インデント."""
         # 選択部分の始まりと終わりの行番号を取得
         first, last = self.editor.get_selection_indices()
         if first and last:
@@ -26,7 +31,7 @@ class BaseCodeStyle:
         return 'break'
 
     def dedent(self):
-        """Ctrl+B、逆インデント."""
+        """逆インデント."""
         # 選択部分の始まりと終わりの行番号を取得
         first, last = self.editor.get_selection_indices()
         if first and last:
@@ -58,11 +63,10 @@ class BaseCodeStyle:
             # カーソル位置までの行テキスト
             current_line_text = self.editor.get_line_text_before_cursor()
 
-            # カーソルの列番号(何文字めにカーソルがあるか)を取得
-            _, col = self.editor.get_line_number()
-
             # カーソル位置の前の部分がインデントならば、インデント毎消す
-            indent_range_text = current_line_text[col-self.indent_length:col]
+            start = 'insert-{0}c'.format(self.indent_length)
+            end = 'insert'
+            indent_range_text = self.text.get(start, end)
             if indent_range_text == self.one_indent:
                 self.text.delete(
                     'insert -{0}c'.format(self.indent_length), 'insert')

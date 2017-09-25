@@ -94,7 +94,9 @@ class EditorFrame(ttk.Frame):
         self.text.bind('<<Change>>', self.line_highlight)
         self.text.bind('<<Change>>', self.update_line_number, '+')
 
-        self.text.bind('<Tab>', self.indent)  # Tab押下時(インデント)
+        # Tab押下時(インデント、又はコード補完)
+        self.text.bind('<Tab>', self.tab)
+
         self.text.bind('<Control-Key-bracketright>', self.indent)  # Ctrl+]押下時(インデント)
         self.text.bind('<Control-Key-bracketleft>', self.dedent)  # Ctrl+[押下時(逆インデント)
 
@@ -163,11 +165,22 @@ class EditorFrame(ttk.Frame):
         """カーソルまでの現在の行のテキストを返す."""
         return self.text.get('insert linestart', 'insert')
 
-    def get_line_number(self):
-        """現在の行番号、列番号を整数で返す."""
-        pos = self.text.index('insert')
-        row, col = [int(x) for x in pos.split('.')]
-        return row, col
+    def get_current_insert_word(self):
+        """現在入力中の単語と位置を取得する."""
+        text = ''
+        i = 1
+        while True:
+            start = 'insert-{0}c'.format(i)
+            end = 'insert'
+            text = self.text.get(start, end)
+            if ' ' in text or '\t' in text or '\n' in text:
+                # スペースや改行を含まないキレイな位置にする
+                # text.delete(start, end)や.get(start, end)に渡せる形にするということ
+                start = 'insert-{0}c'.format(i-1)
+                break
+            i += 1
+        text = self.text.get(start, end)
+        return text, start, end
 
     def get_selection_indices(self):
         """選択部分の始まりと終わりの行番号を返す."""
@@ -206,6 +219,10 @@ class EditorFrame(ttk.Frame):
     def lint(self):
         """コードのスタイルガイドチェック."""
         return self.code_style.lint()
+
+    def tab(self, event=None):
+        """タブでのコード補完、インデント."""
+        return self.code_style.tab()
 
     def indent(self, event=None):
         """タブキー押下時(インデント)."""
