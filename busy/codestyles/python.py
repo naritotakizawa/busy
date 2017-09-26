@@ -90,9 +90,9 @@ class PythonCodeStyle(BaseCodeStyle):
         if first and last:
             return self.indent()
         else:
-            # カーソル位置の前がタブ、スペースならばインデント処理
+            # カーソル位置の前がタブ、スペース、空文字、改行ならばインデント処理
             before_insert_text = self.text.get('insert-1c', 'insert')
-            if before_insert_text in (' ', '\t', '\n'):
+            if before_insert_text in (' ', '\t', '\n', ''):
                 return self.indent()
             else:
                 return self.auto_complete()
@@ -148,7 +148,7 @@ class PythonCodeStyle(BaseCodeStyle):
 
     def auto_complete(self):
         """コード補完."""
-        auto_complete_list = tk.Listbox(self.editor)
+        auto_complete_list = tk.Listbox(self.text)
 
         # エンターでそのキーワードを選択
         auto_complete_list.bind('<Return>', self.selection)

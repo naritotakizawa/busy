@@ -168,28 +168,20 @@ class EditorFrame(ttk.Frame):
     def get_current_insert_word(self):
         """現在入力中の単語と位置を取得する."""
         text = ''
-        last = ''
-        i = 1
+        start_i = 1
+        end_i = 0
         while True:
-            start = 'insert-{0}c'.format(i)
-            end = 'insert'
+            start = 'insert-{0}c'.format(start_i)
+            end = 'insert-{0}c'.format(end_i)
             text = self.text.get(start, end)
 
-            # スペース、改行などが混じれば単語はそこまでと判断
-            # last == textは、1行目1文字目等で補完を行うとなる。0.0の1文字前も0.0と同じなため...
-            if ' ' in text or '\t' in text or '\n' in text or last == text:
-                # スペースや改行を含まないキレイな位置にする
-                # text.delete(start, end)や.get(start, end)に渡せる形にするということ
-                start = 'insert-{0}c'.format(i-1)
-                text = self.text.get(start, end)
-                return text, start, end
+            # 1文字ずつ見て、スペース、改行、タブ、空文字にぶつかったら終わり
+            if text in (' ', '\t', '\n', ''):
+                text = self.text.get(end, 'insert')
+                return text, end, 'insert'
 
-            # 100文字以上、又は100回以上のループは終了
-            if i >= 100:
-                return '', 'insert', 'insert'
-
-            last = text
-            i += 1
+            start_i += 1
+            end_i += 1
 
     def get_selection_indices(self):
         """選択部分の始まりと終わりの行番号を返す."""
