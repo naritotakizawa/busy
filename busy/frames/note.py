@@ -91,7 +91,7 @@ class EditorNoteBook(ttk.Notebook):
         if file_path is None:
             file_path = filedialog.askopenfilename(initialdir=initial_dir)
         if file_path:
-            self.add_tab(path=file_path)
+            return self.add_tab(path=file_path)
 
 
 if __name__ == '__main__':

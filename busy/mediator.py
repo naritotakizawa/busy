@@ -39,55 +39,55 @@ class EventMediator:
         """ファイルの保存."""
         if initial_dir is None:
             initial_dir = self.path_frame.root_path
-        self.note_frame.save_file(event=event, initial_dir=initial_dir)
+        return self.note_frame.save_file(event=event, initial_dir=initial_dir)
 
     def delete_tab(self, event=None):
         """タブの削除."""
-        self.note_frame.delete_tab(event=event)
+        return self.note_frame.delete_tab(event=event)
 
     def new_file(self, event=None):
         """新規ファイルを開く."""
-        self.note_frame.add_tab(event=event)
+        return self.note_frame.add_tab(event=event)
 
     def open_file(self, event=None, file_path=None, initial_dir=None):
         """ファイルを開く."""
         if initial_dir is None:
             initial_dir = self.path_frame.root_path
-        self.note_frame.open_file(
+        return self.note_frame.open_file(
             event=event, file_path=file_path, initial_dir=initial_dir
         )
 
     def add_history(self, text):
         """履歴にテキストを追加する."""
-        self.info_frame.add_history(text)
+        return self.info_frame.add_history(text)
 
     def clear_history(self):
         """履歴欄をクリアする."""
-        self.info_frame.clear_history()
+        return self.info_frame.clear_history()
 
     def update_history(self, text):
         """履歴欄を更新する."""
-        self.info_frame.update_history(text)
+        return self.info_frame.update_history(text)
 
     def add_lint(self, text):
         """スタイルチェック欄にテキストを追加する."""
-        self.info_frame.add_lint(text)
+        return self.info_frame.add_lint(text)
 
     def clear_lint(self):
         """スタイルチェック欄をクリアする."""
-        self.info_frame.clear_lint()
+        return self.info_frame.clear_lint()
 
     def update_lint(self, text):
         """スタイルチェック欄を更新する."""
-        self.info_frame.update_lint(text)
+        return self.info_frame.update_lint(text)
 
     def update_dir(self, event=None):
         """ツリーのディレクトリを更新する."""
-        self.path_frame.update_dir(event=event)
+        return self.path_frame.update_dir(event=event)
 
     def change_dir(self, event=None):
         """ツリーのルートディレクトリを変更する."""
-        self.path_frame.change_dir(event=event)
+        return self.path_frame.change_dir(event=event)
 
     def indent(self, event=None):
         """インデント."""
@@ -95,7 +95,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor, _ = self.note_frame.get_current_editor()
-        current_editor.indent(event=event)
+        return current_editor.indent(event=event)
 
     def dedent(self, event=None):
         """逆インデント."""
@@ -103,7 +103,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor, _ = self.note_frame.get_current_editor()
-        current_editor.dedent(event=event)
+        return current_editor.dedent(event=event)
 
     def highlight(self, event=None):
         """ハイライト."""
@@ -111,7 +111,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor, _ = self.note_frame.get_current_editor()
-        current_editor.all_highlight(event=event)
+        return current_editor.all_highlight(event=event)
 
     def select_all(self, event=None):
         """テキスト全選択."""
@@ -119,7 +119,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor, _ = self.note_frame.get_current_editor()
-        current_editor.select_all(event=event)
+        return current_editor.select_all(event=event)
 
     def search(self, event=None):
         """テキスト検索."""
@@ -127,7 +127,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor, _ = self.note_frame.get_current_editor()
-        current_editor.create_search_box(event=event)
+        return current_editor.create_search_box(event=event)
 
     def replace(self, event=None):
         """テキスト置換."""
@@ -135,7 +135,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor, _ = self.note_frame.get_current_editor()
-        current_editor.create_replace_box(event=event)
+        return current_editor.create_replace_box(event=event)
 
 
 event = MockMediator()
