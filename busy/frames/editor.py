@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from busy import mediator
 from busy.codestyles import get_code_style
 from busy.frames import SearchBox, ReplaceBox
 
@@ -44,6 +45,7 @@ class EditorFrame(ttk.Frame):
 
     def __init__(self, master, path=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
+        self.change_count = 0
         self.create_widgets()
         self.create_event()
         self.path = path
@@ -91,8 +93,7 @@ class EditorFrame(ttk.Frame):
         self.text.bind('<<Scroll>>', self.update_line_number)
 
         # テキストの変更時
-        self.text.bind('<<Change>>', self.line_highlight)
-        self.text.bind('<<Change>>', self.update_line_number, '+')
+        self.text.bind('<<Change>>', self.on_change)
 
         # Tab押下時(インデント、又はコード補完)
         self.text.bind('<Tab>', self.tab)
@@ -120,6 +121,18 @@ class EditorFrame(ttk.Frame):
 
         # Ctrl+Fで検索ボックス
         self.text.bind('<Control-h>', self.create_replace_box)
+
+    def on_change(self, event=None):
+        """エディタの内容が変更された際に呼ばれる"""
+        # 行ハイライト
+        self.line_highlight(event=event)
+
+        # 行番号更新
+        self.update_line_number(event=event)
+
+        # 変更フラグと、tab名変更のためのイベント呼び出し
+        mediator.event.on_change(event=event)
+        self.change_count += 1
 
     def update_line_number(self, event=None):
         """行番号の描画."""

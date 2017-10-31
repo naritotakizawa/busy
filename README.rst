@@ -52,4 +52,4 @@ Tree Shortcut Key
 エディタ対応ファイル
 ===============
 :.html: HTMLファイル
-:.python: Pythoファイル
+:.python: Pythonファイル

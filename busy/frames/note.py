@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from busy import mediator
 from busy.frames import EditorFrame
 
@@ -56,6 +56,10 @@ class EditorNoteBook(ttk.Notebook):
         else:
             with open(current_editor.path, 'w') as file:
                 file.write(src)
+            # 保存したら、変更フラグ(回数)をリセットしタブ名を通常に
+            file_name = os.path.basename(current_editor.path)
+            self.tab(current_editor, text=file_name)
+            current_editor.change_count = 0
 
         # セーブ後にコードのチェック
         current_editor.lint()
@@ -71,8 +75,10 @@ class EditorNoteBook(ttk.Notebook):
         # そもそもタブを開いてなければ処理しない
         if not self.tabs():
             return 'break'
-        current = self.select()
-        self.forget(current)
+        # ファイルが変更済みだが保存していない場合は、警告
+        if messagebox.askyesno(message='変更済みのファイルですが、保存しなくて良いですか？'):
+            current = self.select()
+            self.forget(current)
 
     def get_current_editor(self):
         """選択中のエディタを返す"""
@@ -86,6 +92,18 @@ class EditorNoteBook(ttk.Notebook):
             file_path = filedialog.askopenfilename(initialdir=initial_dir)
         if file_path:
             return self.add_tab(path=file_path)
+
+    def editor_on_change(self, event=None):
+        """エディタのタブ名に「*」を入れる"""
+        current_editor = self.get_current_editor()
+        # 新規ファイルだった場合
+        if current_editor.path is None:
+            pass
+        # 更新。変更回数が1回以上あれば、内容が変更されたと判断
+        elif current_editor.change_count:
+            file_name = os.path.basename(current_editor.path)
+            tab_name = '*{0}'.format(file_name)
+            self.tab(current_editor, text=tab_name)
 
 
 if __name__ == '__main__':

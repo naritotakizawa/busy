@@ -94,7 +94,7 @@ class EventMediator:
         # 開いているエディタがなければ処理しない
         if not self.note_frame.tabs():
             return 'break'
-        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor = self.note_frame.get_current_editor()
         return current_editor.indent(event=event)
 
     def dedent(self, event=None):
@@ -102,7 +102,7 @@ class EventMediator:
         # 開いているエディタがなければ処理しない
         if not self.note_frame.tabs():
             return 'break'
-        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor = self.note_frame.get_current_editor()
         return current_editor.dedent(event=event)
 
     def highlight(self, event=None):
@@ -110,7 +110,7 @@ class EventMediator:
         # 開いているエディタがなければ処理しない
         if not self.note_frame.tabs():
             return 'break'
-        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor = self.note_frame.get_current_editor()
         return current_editor.all_highlight(event=event)
 
     def select_all(self, event=None):
@@ -118,7 +118,7 @@ class EventMediator:
         # 開いているエディタがなければ処理しない
         if not self.note_frame.tabs():
             return 'break'
-        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor = self.note_frame.get_current_editor()
         return current_editor.select_all(event=event)
 
     def search(self, event=None):
@@ -126,7 +126,7 @@ class EventMediator:
         # 開いているエディタがなければ処理しない
         if not self.note_frame.tabs():
             return 'break'
-        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor = self.note_frame.get_current_editor()
         return current_editor.create_search_box(event=event)
 
     def replace(self, event=None):
@@ -134,8 +134,12 @@ class EventMediator:
         # 開いているエディタがなければ処理しない
         if not self.note_frame.tabs():
             return 'break'
-        current_editor, _ = self.note_frame.get_current_editor()
+        current_editor = self.note_frame.get_current_editor()
         return current_editor.create_replace_box(event=event)
+
+    def on_change(self, event=None):
+        """エディタが変更された際に呼ばれ、NoteBookのタブ名に「*」を入れる"""
+        return self.note_frame.editor_on_change(event=event)
 
 
 event = MockMediator()
