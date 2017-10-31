@@ -1,6 +1,5 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from busy import mediator
 from busy.codestyles import get_code_style
 from busy.frames import SearchBox, ReplaceBox
 
@@ -82,9 +81,6 @@ class EditorFrame(ttk.Frame):
         # 縦と、コード入力欄のみ拡大されるように
         self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
-
-        # 内容に応じて勝手に大きくなるのを防ぐ
-        self.grid_propagate(False)
 
     def create_event(self):
         """イベントの設定."""
@@ -263,6 +259,6 @@ if __name__ == '__main__':
     root = tk.Tk()
     app = EditorFrame(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
-    root.columnconfigure(0, weight=1, minsize=100)
-    root.rowconfigure(0, weight=1, minsize=100)
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
     root.mainloop()

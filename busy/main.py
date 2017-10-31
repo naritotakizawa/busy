@@ -25,14 +25,10 @@ class Busy(ttk.Frame):
         self.info_frame.grid(
             row=1, column=0, columnspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
 
-        self.path_frame.grid_propagate(False)
-        self.note_frame.grid_propagate(False)
-        self.info_frame.grid_propagate(False)
-
-        self.columnconfigure(0, weight=1, minsize=100)
-        self.columnconfigure(1, weight=3, minsize=100)
-        self.rowconfigure(0, weight=3, minsize=100)
-        self.rowconfigure(1, weight=1, minsize=100)
+        self.columnconfigure(0, weight=1, uniform='group1')
+        self.columnconfigure(1, weight=3, uniform='group1')
+        self.rowconfigure(0, weight=4, uniform='group2')
+        self.rowconfigure(1, weight=1, uniform='group2')
 
     def create_mediator(self):
         """イベント仲介オブジェクトの作成."""
