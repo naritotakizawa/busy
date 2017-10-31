@@ -13,6 +13,7 @@ class EditorNoteBook(ttk.Notebook):
 
     def add_tab(self, event=None, path=None):
         """新しいタブを追加する."""
+
         # エディタの作成
         editor = EditorFrame(self, path)
 
@@ -23,8 +24,9 @@ class EditorNoteBook(ttk.Notebook):
             # それと合わせるためにカウントを+1
             editor.change_count += 1
 
-        # パスの指定があれば、エディタにそのファイルの内容を読み込み、ファイル名をタブに
+        # パスの指定があれば
         else:
+            # ファイルの内容を読み込み、ファイル名をタブに
             name = os.path.basename(path)
             with open(path, 'r', encoding='utf-8') as file:
                 editor.text.insert('1.0', file.read())
@@ -93,7 +95,16 @@ class EditorNoteBook(ttk.Notebook):
         """ファイルを開く."""
         if file_path is None:
             file_path = filedialog.askopenfilename(initialdir=initial_dir)
+
         if file_path:
+            # そのパスで既に開いたタブがあるかを確認
+            for tab in self.tabs():
+                widget_name = tab.split('.')[-1]
+                editor = self.children[widget_name]
+                if editor.path == file_path:
+                    self.select(tab)
+                    return 'break'
+
             return self.add_tab(path=file_path)
 
     def change_tab_name(self, event=None):
