@@ -45,7 +45,6 @@ class EditorFrame(ttk.Frame):
 
     def __init__(self, master, path=None, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        self.change_count = 0
         self.create_widgets()
         self.create_event()
         self.path = path
@@ -90,7 +89,7 @@ class EditorFrame(ttk.Frame):
     def create_event(self):
         """イベントの設定."""
         # テキスト内でのスクロール時
-        self.text.bind('<<Scroll>>', self.update_line_number)
+        self.text.bind('<<Scroll>>', self.on_scroll)
 
         # テキストの変更時
         self.text.bind('<<Change>>', self.on_change)
@@ -119,20 +118,17 @@ class EditorFrame(ttk.Frame):
         # Ctrl+Fで検索ボックス
         self.text.bind('<Control-f>', self.create_search_box)
 
-        # Ctrl+Fで検索ボックス
+        # Ctrl+Hで置換ボックス
         self.text.bind('<Control-h>', self.create_replace_box)
+
+    def on_scroll(self, event=None):
+        """スクロール時に呼ばれる"""
+        self.update_line_number(event=event)  # 行番号更新
 
     def on_change(self, event=None):
         """エディタの内容が変更された際に呼ばれる"""
-        # 行ハイライト
-        self.line_highlight(event=event)
-
-        # 行番号更新
-        self.update_line_number(event=event)
-
-        # 変更フラグと、tab名変更のためのイベント呼び出し
-        mediator.event.on_change(event=event)
-        self.change_count += 1
+        self.line_highlight(event=event)  # 行ハイライト
+        self.update_line_number(event=event)  # 行番号更新
 
     def update_line_number(self, event=None):
         """行番号の描画."""

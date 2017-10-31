@@ -57,18 +57,6 @@ class EventMediator:
             event=event, file_path=file_path, initial_dir=initial_dir
         )
 
-    def add_history(self, text):
-        """履歴にテキストを追加する."""
-        return self.info_frame.add_history(text)
-
-    def clear_history(self):
-        """履歴欄をクリアする."""
-        return self.info_frame.clear_history()
-
-    def update_history(self, text):
-        """履歴欄を更新する."""
-        return self.info_frame.update_history(text)
-
     def add_lint(self, text):
         """スタイルチェック欄にテキストを追加する."""
         return self.info_frame.add_lint(text)
@@ -136,10 +124,6 @@ class EventMediator:
             return 'break'
         current_editor = self.note_frame.get_current_editor()
         return current_editor.create_replace_box(event=event)
-
-    def on_change(self, event=None):
-        """エディタが変更された際に呼ばれ、NoteBookのタブ名に「*」を入れる"""
-        return self.note_frame.editor_on_change(event=event)
 
 
 event = MockMediator()
