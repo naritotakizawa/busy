@@ -1,4 +1,8 @@
-"""テキスト検索ボックスを提供するモジュール."""
+"""テキスト検索ボックスを提供するモジュール
+
+create_search_box関数に、tk.Textウィジェットを渡せば利用できます。
+
+"""
 import tkinter as tk
 import tkinter.ttk as ttk
 
@@ -6,13 +10,12 @@ import tkinter.ttk as ttk
 class SearchBox(ttk.Frame):
     """テキスト検索ボックス."""
 
-    def __init__(self, master, text_widget, **kwargs):
-        """初期化.
+    def __init__(self, master, text_widget, *args, **kwargs):
+        """初期化
 
         text_widget引数に、tk.Textウィジェットを渡してください
-
         """
-        super().__init__(master, **kwargs)
+        super().__init__(master, *args, **kwargs)
         self.target_text = text_widget  # 検索する対象となるTextウィジェット
         self.create_widgets()
         self.last_text = ''
@@ -86,7 +89,7 @@ class SearchBox(ttk.Frame):
         if not now_text:
             # 空欄だったら処理しない
             pass
-        if now_text != self.last_text:
+        elif now_text != self.last_text:
             # 前回の入力と違う文字なら、検索を最初から行う
             self.search_start(now_text)
         else:
@@ -97,11 +100,18 @@ class SearchBox(ttk.Frame):
         self.last_text = now_text
 
 
-def test(event):
-    """テキスト検索のテスト用関数."""
-    search_window = tk.Toplevel(root)
-    search_box = SearchBox(search_window, text)
-    search_box.pack()
+def create_search_box(text_widget, title='Search Box'):
+    """検索ボックスを作成する関数
+
+    args:
+        text_widget: tk.Textウィジェット
+        title: 検索ボックスのタイトル
+
+    """
+    window = tk.Toplevel()
+    window.title(title)
+    box = SearchBox(window, text_widget)
+    box.pack()
 
 
 if __name__ == '__main__':
@@ -109,5 +119,8 @@ if __name__ == '__main__':
     root.title('Search Test')
     text = tk.Text(root)
     text.pack()
-    root.bind('<Control-f>', test)
+    root.bind(
+        '<Control-f>',
+        lambda event: create_search_box(text_widget=text),
+    )
     root.mainloop()

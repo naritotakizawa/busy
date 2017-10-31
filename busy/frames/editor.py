@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from busy.codestyles import get_code_style
-from busy.frames import SearchBox, ReplaceBox
+from busy.frames import create_search_box, create_replace_box
 
 
 class CustomText(tk.Text):
@@ -112,10 +112,10 @@ class EditorFrame(ttk.Frame):
         self.text.bind('<Configure>', self.update_line_number)
 
         # Ctrl+Fで検索ボックス
-        self.text.bind('<Control-f>', self.create_search_box)
+        self.text.bind('<Control-f>', lambda e: create_search_box(self.text))
 
         # Ctrl+Hで置換ボックス
-        self.text.bind('<Control-h>', self.create_replace_box)
+        self.text.bind('<Control-h>', lambda e: create_replace_box(self.text))
 
     def on_scroll(self, event=None):
         """スクロール時に呼ばれる"""
@@ -204,22 +204,6 @@ class EditorFrame(ttk.Frame):
     def select_all(self, event=None):
         """テキストを全て選択する."""
         self.text.tag_add('sel', '1.0', 'end')
-        return 'break'
-
-    def create_search_box(self, event):
-        """テキスト検索ボックスの作成."""
-        window = tk.Toplevel(self)
-        window.title('Search')
-        box = SearchBox(window, self.text)
-        box.pack()
-        return 'break'
-
-    def create_replace_box(self, event):
-        """テキスト置換ボックスの作成."""
-        window = tk.Toplevel(self)
-        window.title('Replace')
-        box = ReplaceBox(window, self.text)
-        box.pack()
         return 'break'
 
     def lint(self):
