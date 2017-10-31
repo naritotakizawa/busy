@@ -125,6 +125,10 @@ class EventMediator:
         current_editor = self.note_frame.get_current_editor()
         return current_editor.create_replace_box(event=event)
 
+    def change_tab_name(self, event=None):
+        """タブ名に*を入れる"""
+        return self.note_frame.change_tab_name()
+
 
 event = MockMediator()
 

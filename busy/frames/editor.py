@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from busy import mediator
 from busy.codestyles import get_code_style
 from busy.frames import create_search_box, create_replace_box
 
@@ -47,6 +48,8 @@ class EditorFrame(ttk.Frame):
         self.create_widgets()
         self.create_event()
         self.path = path
+        self.changed = False
+        self.change_count = 0
 
     @property
     def path(self):
@@ -125,6 +128,13 @@ class EditorFrame(ttk.Frame):
         """エディタの内容が変更された際に呼ばれる"""
         self.line_highlight(event=event)  # 行ハイライト
         self.update_line_number(event=event)  # 行番号更新
+
+        # ファイルから読み込んだ際、tk.insertでファイルから内容が移される
+        # その際にon changeイベントが非同期で走るため、初回のinsertかどうかを見分ける処理
+        if self.change_count:
+            self.changed = True
+            mediator.event.change_tab_name(event=event)
+        self.change_count += 1
 
     def update_line_number(self, event=None):
         """行番号の描画."""

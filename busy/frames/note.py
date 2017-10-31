@@ -2,7 +2,6 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
-from busy import mediator
 from busy.frames import EditorFrame
 
 
@@ -20,12 +19,15 @@ class EditorNoteBook(ttk.Notebook):
         # パスの指定がなければ、new file という名前がタブに入る
         if path is None:
             name = 'new file'
+            # ファイルから読み込んだ際、初回insertでonchangeが走るので
+            # それと合わせるためにカウントを+1
+            editor.change_count += 1
 
         # パスの指定があれば、エディタにそのファイルの内容を読み込み、ファイル名をタブに
         else:
             name = os.path.basename(path)
             with open(path, 'r', encoding='utf-8') as file:
-                editor.text.insert(tk.INSERT, file.read())
+                editor.text.insert('1.0', file.read())
                 editor.all_highlight()
 
         # NoteBookにエディタを追加
@@ -60,15 +62,26 @@ class EditorNoteBook(ttk.Notebook):
 
         # セーブ後にコードのチェック
         current_editor.lint()
+        current_editor.changed = False
+        self.reset_tab_name()
+
+    def _delete_tab(self):
+        """タブを削除"""
+        current = self.select()
+        self.forget(current)
 
     def delete_tab(self, event=None):
         """選択中のタブを削除する."""
         # そもそもタブを開いてなければ処理しない
         if not self.tabs():
             return 'break'
-        # タブの削除
-        current = self.select()
-        self.forget(current)
+        current_editor = self.get_current_editor()
+        # 変更済みで、保存していないよの確認で「No」だと何もしない
+        if current_editor.changed:
+            if messagebox.askyesno(message='保存していませんが、よろしいですか'):
+                self._delete_tab()
+        else:
+            self._delete_tab()
 
     def get_current_editor(self):
         """選択中のエディタを返す"""
@@ -82,6 +95,18 @@ class EditorNoteBook(ttk.Notebook):
             file_path = filedialog.askopenfilename(initialdir=initial_dir)
         if file_path:
             return self.add_tab(path=file_path)
+
+    def change_tab_name(self, event=None):
+        """タブ名に「*」を入れる"""
+        current_tab = self.select()
+        tab_name = self.tab(current_tab)['text'].replace('*', '')
+        self.tab(current_tab, text='*' + tab_name)
+
+    def reset_tab_name(self, event=None):
+        """タブ名の*を消す"""
+        current_tab = self.select()
+        tab_name = self.tab(current_tab)['text'].replace('*', '')
+        self.tab(current_tab, text=tab_name)
 
 
 if __name__ == '__main__':
