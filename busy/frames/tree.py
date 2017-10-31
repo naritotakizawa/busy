@@ -10,7 +10,7 @@ from busy import mediator
 class PathTreeFrame(ttk.Frame):
     """ディレクトリ・ファイルツリーを表示するFrame."""
 
-    def __init__(self, master, path=os.curdir, *args, **kwargs):
+    def __init__(self, master=None, path=os.curdir, **kwargs):
         """初期化.
 
         args:
@@ -18,7 +18,7 @@ class PathTreeFrame(ttk.Frame):
             path: どのパスを起点にツリーを作るか。デフォルトはカレント
 
         """
-        super().__init__(master, *args, **kwargs)
+        super().__init__(master, **kwargs)
         self.root_path = os.path.abspath(path)
         self.nodes = {}
         self.create_widgets()

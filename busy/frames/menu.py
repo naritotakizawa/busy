@@ -12,8 +12,8 @@ from busy import mediator
 
 class EditorMenu(tk.Menu):
 
-    def __init__(self, master=None):
-        super().__init__(master)
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
         self.create_file_menu()
         self.create_edit_menu()
         self.create_tree_menu()

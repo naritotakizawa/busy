@@ -9,8 +9,8 @@ from busy.frames import EditorFrame
 class EditorNoteBook(ttk.Notebook):
     """エディタを管理するのNoteBookウィジェット."""
 
-    def __init__(self, master, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
 
     def add_tab(self, event=None, path=None):
         """新しいタブを追加する."""

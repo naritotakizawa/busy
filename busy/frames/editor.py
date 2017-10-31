@@ -7,8 +7,8 @@ from busy.frames import SearchBox, ReplaceBox
 class CustomText(tk.Text):
     """Textの、イベントを拡張したウィジェット."""
 
-    def __init__(self, master, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
         self.tk.eval('''
             proc widget_proxy {widget widget_command args} {
 

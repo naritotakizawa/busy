@@ -6,13 +6,13 @@ import tkinter.ttk as ttk
 class SearchBox(ttk.Frame):
     """テキスト検索ボックス."""
 
-    def __init__(self, master, text_widget, *args, **kwargs):
+    def __init__(self, master, text_widget, **kwargs):
         """初期化.
 
         text_widget引数に、tk.Textウィジェットを渡してください
 
         """
-        super().__init__(master, *args, **kwargs)
+        super().__init__(master, **kwargs)
         self.target_text = text_widget  # 検索する対象となるTextウィジェット
         self.create_widgets()
         self.last_text = ''

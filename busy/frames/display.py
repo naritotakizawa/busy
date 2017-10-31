@@ -6,8 +6,8 @@ import tkinter.ttk as ttk
 class InfoFrame(ttk.Frame):
     """お知らせなどを表示するFrame."""
 
-    def __init__(self, master=None, *args, **kwargs):
-        super().__init__(master, *args, **kwargs)
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
         self.create_widgets()
 
     def create_widgets(self):
