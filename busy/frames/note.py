@@ -11,7 +11,6 @@ class EditorNoteBook(ttk.Notebook):
 
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        self.editor_list = []
 
     def add_tab(self, event=None, path=None):
         """新しいタブを追加する."""
@@ -32,9 +31,6 @@ class EditorNoteBook(ttk.Notebook):
         # NoteBookにエディタを追加
         self.add(editor, text=name)
 
-        # エディタの参照を保持するため、リストに格納
-        self.editor_list.append(editor)
-
         # 今開いたタブを選択する
         now_open_tab = self.tabs()[-1]
         self.select(now_open_tab)
@@ -45,7 +41,7 @@ class EditorNoteBook(ttk.Notebook):
         if not self.tabs():
             return 'break'
         # 現在開いているエディタと、中身を取得
-        current_editor, _ = self.get_current_editor()
+        current_editor = self.get_current_editor()
         src = current_editor.get_src()
 
         # 新規ファイルだった場合は、ファイル名を指定させて保存
@@ -75,16 +71,14 @@ class EditorNoteBook(ttk.Notebook):
         # そもそもタブを開いてなければ処理しない
         if not self.tabs():
             return 'break'
-        current_editor_id, index = self.get_current_editor()
-        self.forget(current_editor_id)
-        self.editor_list.pop(index)
+        current = self.select()
+        self.forget(current)
 
     def get_current_editor(self):
-        """選択中のタブIDと、indexを返す."""
-        # このindexは、self.tabs内でのタブのindexであり
-        # self.editor_listのindexでもある
-        index = self.index(self.select())
-        return self.editor_list[index], index
+        """選択中のエディタを返す"""
+        current_widget_name = self.select().split('.')[-1]
+        text_widget = self.children[current_widget_name]
+        return text_widget
 
     def open_file(self, event=None, file_path=None, initial_dir=os.curdir):
         """ファイルを開く."""
