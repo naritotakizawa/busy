@@ -122,6 +122,7 @@ class EditorNoteBook(ttk.Notebook):
 
 if __name__ == '__main__':
     root = tk.Tk()
+    root.title('Busy Simple')
     app = EditorNoteBook(root)
     app.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
     root.bind('<Control-KeyPress-s>', app.save_file)
@@ -129,6 +130,6 @@ if __name__ == '__main__':
     root.bind('<Control-KeyPress-n>', app.add_tab)
     root.bind('<Control-KeyPress-o>', app.open_file)
     app.add_tab()  # 新規ファイルを開いておこう
-    root.columnconfigure(0, weight=1, minsize=100)
-    root.rowconfigure(0, weight=1, minsize=100)
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
     root.mainloop()

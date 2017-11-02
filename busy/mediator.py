@@ -25,8 +25,12 @@ class MockMediator:
         return inner
 
 
-class EventMediator:
-    """遠く離れたウィジェット間でのやりとりを仲介するデフォルトのクラス."""
+class EventMediator(MockMediator):
+    """遠く離れたウィジェット間でのやりとりを仲介するデフォルトのクラス.
+
+    main.pyでの実行時(busyコマンド)に使われます。
+
+    """
 
     def __init__(self, main_frame, info_frame, path_frame, note_frame):
         """各フレームの参照を保持する."""
@@ -115,7 +119,7 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor = self.note_frame.get_current_editor()
-        return current_editor.create_search_box(event=event)
+        return current_editor.search(event=event)
 
     def replace(self, event=None):
         """テキスト置換."""
@@ -123,11 +127,40 @@ class EventMediator:
         if not self.note_frame.tabs():
             return 'break'
         current_editor = self.note_frame.get_current_editor()
-        return current_editor.create_replace_box(event=event)
+        return current_editor.replace(event=event)
 
     def change_tab_name(self, event=None):
         """タブ名に*を入れる"""
         return self.note_frame.change_tab_name()
+
+
+class SimpleMediator(EventMediator):
+    """busy-simpleコマンドでの、シンプルなエディタを利用する際に使われる仲介オブジェクト."""
+
+    def __init__(self, main_frame, note_frame):
+        """各フレームの参照を保持する."""
+        self.main_frame = main_frame
+        self.note_frame = note_frame
+
+    def save_file(self, event=None):
+        """ファイルの保存."""
+        return self.note_frame.save_file(event=event)
+
+    def delete_tab(self, event=None):
+        """タブの削除."""
+        return self.note_frame.delete_tab(event=event)
+
+    def new_file(self, event=None):
+        """新規ファイルを開く."""
+        return self.note_frame.add_tab(event=event)
+
+    def open_file(self, event=None):
+        """ファイルを開く."""
+        return self.note_frame.open_file(event=event)
+
+    def update_lint(self, text):
+        """スタイルチェック欄を更新する."""
+        pass
 
 
 event = MockMediator()

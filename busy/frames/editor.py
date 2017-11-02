@@ -115,10 +115,28 @@ class EditorFrame(ttk.Frame):
         self.text.bind('<Configure>', self.update_line_number)
 
         # Ctrl+Fで検索ボックス
-        self.text.bind('<Control-f>', lambda e: create_search_box(self.text))
+        self.text.bind('<Control-f>', self.search)
 
         # Ctrl+Hで置換ボックス
-        self.text.bind('<Control-h>', lambda e: create_replace_box(self.text))
+        self.text.bind('<Control-h>', self.replace)
+
+        # Ctrl+Oで何もしない。Textウィジェット自体のイベントを消す
+        self.text.bind('<Control-o>', self.o)
+
+    def o(self, event=None):
+        """TextウィジェットのCtrl+Oイベントを上書き..."""
+        mediator.event.open_file()
+        return 'break'
+
+    def search(self, event=None):
+        """検索ボックスの作成"""
+        create_search_box(self.text)
+        return 'break'
+
+    def replace(self, event=None):
+        """置換ボックスの作成"""
+        create_replace_box(self.text)
+        return 'break'
 
     def on_scroll(self, event=None):
         """スクロール時に呼ばれる"""

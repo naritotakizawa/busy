@@ -25,6 +25,7 @@ setup(
     ],
     entry_points={'console_scripts': [
         'busy = busy.main:main',
+        'busy-simple = busy.simple:main',
     ]},
     install_requires=['flake8', 'Pygments'],
 )
