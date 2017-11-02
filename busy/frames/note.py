@@ -62,8 +62,9 @@ class EditorNoteBook(ttk.Notebook):
             with open(current_editor.path, 'w') as file:
                 file.write(src)
 
-        # セーブ後にコードのチェック
+        # セーブ後にコードのチェック、全てハイライト、変更フラグをFalse、タブ名の*を消去
         current_editor.lint()
+        current_editor.all_highlight()
         current_editor.changed = False
         self.reset_tab_name()
 
