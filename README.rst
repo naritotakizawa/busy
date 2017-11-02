@@ -18,7 +18,7 @@ Install
 
 2. うごかす ::
 
-    busy
+    busy or busy-simple
 
 
 File Shortcut Key
