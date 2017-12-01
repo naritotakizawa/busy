@@ -85,7 +85,7 @@ class PathTreeFrame(ttk.Frame):
             self.tree.delete(self.tree.get_children(node))
 
             # ディレクトリ内の全てのファイル・ディレクトリを取得し、Treeviewに追加
-            for entry in os.scandir(abspath):
+            for entry in sorted(os.scandir(abspath), key=lambda path: path.name):
                 self.insert_node(
                     node, entry.name, os.path.join(abspath, entry.path)
                 )
