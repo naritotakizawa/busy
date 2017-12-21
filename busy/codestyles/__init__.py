@@ -9,6 +9,8 @@ import os
 from .base import BaseCodeStyle
 from .python import PythonCodeStyle
 from .html import HTMLCodeStyle
+from .css import CSSCodeStyle
+from .js import JSCodeStyle
 
 
 def get_code_style(editor_frame, path=None):
@@ -21,5 +23,9 @@ def get_code_style(editor_frame, path=None):
             return PythonCodeStyle(editor_frame)
         elif extension == '.html':
             return HTMLCodeStyle(editor_frame)
+        elif extension == '.css':
+            return CSSCodeStyle(editor_frame)
+        elif extension == '.js':
+            return JSCodeStyle(editor_frame)
         else:
             return BaseCodeStyle(editor_frame)

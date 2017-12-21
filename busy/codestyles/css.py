@@ -1,15 +1,15 @@
-"""HTMLコードのスタイル."""
+"""CSSコードのスタイル."""
 from pygments import lex
-from pygments.lexers.html import HtmlLexer
+from pygments.lexers.css import CssLexer
 
 from busy.codestyles import BaseCodeStyle
 
 
-class HTMLCodeStyle(BaseCodeStyle):
-    """HTMLのエディタスタイル."""
+class CSSCodeStyle(BaseCodeStyle):
+    """CSSのエディタスタイル."""
 
     one_indent = ' ' * 2  # 半角スペース2つ
-    next_is_indent = [r'>']
+    next_is_indent = ['{']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,31 +20,31 @@ class HTMLCodeStyle(BaseCodeStyle):
         # 黄色く表示する
         self.text.tag_configure(
             'Token.Name.Tag', foreground='#CC7A00')  # html body p
+        self.text.tag_configure(
+            'Token.Name.Namespace', foreground='#CC7A00')  # id名
+        self.text.tag_configure(
+            'Token.Name.Class', foreground='#CC7A00')  # クラス名
 
         # 青く表示する
         self.text.tag_configure(
-            'Token.Punctuation', foreground='#003D99')  # < >
+            'Token.Punctuation', foreground='#003D99')  # {} ; . : 
 
         # 緑表示する
         self.text.tag_configure(
-            'Token.Name.Attribute', foreground='#248F24')  # lang value href
+            'Token.Keyword', foreground='#248F24')  # margin padding
 
         # 赤表示する
         self.text.tag_configure(
-            'Token.Comment', foreground='#dc143c')  # <!-- -->
-        self.text.tag_configure(
-            'Token.Literal.String', foreground='#dc143c')  # "en"
+            'Token.Literal.Number.Integer', foreground='#dc143c')  # 10
 
         # 黒く表示
         self.text.tag_configure(
-            'Operator', foreground='#000000')  # =
-        self.text.tag_configure(
-            'Token.Comment.Preproc', foreground='#000000')  # <!DOCTYPE html>
+            'Token.Keyword.Type', foreground='#000000')  # px
 
     def _highlight(self, start_pos, text):
         """テキストをハイライトする."""
         self.text.mark_set('range_start', start_pos)
-        for token, content in lex(text, HtmlLexer()):
+        for token, content in lex(text, CssLexer()):
             self.text.mark_set(
                 'range_end', 'range_start+{0}c'.format(len(content))
             )

@@ -1,15 +1,15 @@
 """HTMLコードのスタイル."""
 from pygments import lex
-from pygments.lexers.html import HtmlLexer
+from pygments.lexers.javascript import JavascriptLexer
 
 from busy.codestyles import BaseCodeStyle
 
 
-class HTMLCodeStyle(BaseCodeStyle):
-    """HTMLのエディタスタイル."""
+class JSCodeStyle(BaseCodeStyle):
+    """JavaScriptのエディタスタイル."""
 
     one_indent = ' ' * 2  # 半角スペース2つ
-    next_is_indent = [r'>']
+    next_is_indent = ['{']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -17,34 +17,35 @@ class HTMLCodeStyle(BaseCodeStyle):
 
     def create_text_tag(self):
         """タグの定義."""
-        # 黄色く表示する
-        self.text.tag_configure(
-            'Token.Name.Tag', foreground='#CC7A00')  # html body p
-
         # 青く表示する
         self.text.tag_configure(
-            'Token.Punctuation', foreground='#003D99')  # < >
-
-        # 緑表示する
+            'Token.Keyword.Declaration', foreground='#003D99')  # function
         self.text.tag_configure(
-            'Token.Name.Attribute', foreground='#248F24')  # lang value href
+            'Token.Operator', foreground='#003D99')  # + - * /
+
+        # 黄色く表示する
+        self.text.tag_configure(
+            'Token.Name.Other', foreground='#CC7A00')  # 関数名
+
+        # 黒く表示する
+        self.text.tag_configure(
+            'Token.Punctuation', foreground='#000000')  # {} ()
 
         # 赤表示する
         self.text.tag_configure(
-            'Token.Comment', foreground='#dc143c')  # <!-- -->
+            'Token.Literal.String.Single', foreground='#dc143c')  # 'aaa'
         self.text.tag_configure(
-            'Token.Literal.String', foreground='#dc143c')  # "en"
-
-        # 黒く表示
+            'Token.Literal.String.Double', foreground='#dc143c')  # 'aaa'
         self.text.tag_configure(
-            'Operator', foreground='#000000')  # =
+            'Token.Comment.Single', foreground='#dc143c')  # //comment
         self.text.tag_configure(
-            'Token.Comment.Preproc', foreground='#000000')  # <!DOCTYPE html>
+            'Token.Literal.Number.Integer', foreground='#dc143c')  # 10
 
     def _highlight(self, start_pos, text):
         """テキストをハイライトする."""
         self.text.mark_set('range_start', start_pos)
-        for token, content in lex(text, HtmlLexer()):
+        for token, content in lex(text, JavascriptLexer()):
+            print(content, token)
             self.text.mark_set(
                 'range_end', 'range_start+{0}c'.format(len(content))
             )

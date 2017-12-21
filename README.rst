@@ -51,5 +51,7 @@ Tree Shortcut Key
 
 エディタ対応ファイル
 ===============
-:.html: HTMLファイル
-:.python: Pythonファイル
+:.html: HTML
+:.css: CSS
+:.js: JavaScript
+:.py: Python
