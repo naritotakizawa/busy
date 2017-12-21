@@ -133,6 +133,10 @@ class EventMediator(MockMediator):
         """タブ名に*を入れる"""
         return self.note_frame.change_tab_name()
 
+    def save_as(self, event=None):
+        """別名で保存."""
+        return self.note_frame.save_as(event=event)
+
 
 class SimpleMediator(EventMediator):
     """busy-simpleコマンドでの、シンプルなエディタを利用する際に使われる仲介オブジェクト."""

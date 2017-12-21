@@ -68,6 +68,26 @@ class EditorNoteBook(ttk.Notebook):
         current_editor.changed = False
         self.reset_tab_name()
 
+    def save_as(self, event=None, initial_dir=os.curdir):
+        """開いているエディタの内容を保存する."""
+        # そもそもタブを開いてなければ処理しない
+        if not self.tabs():
+            return 'break'
+        # 現在開いているエディタと、中身を取得
+        current_editor = self.get_current_editor()
+        src = current_editor.get_src()
+
+        # 保存するファイル名を取得し、基のソースで書き込む
+        file = filedialog.asksaveasfile(mode='w', initialdir=initial_dir)
+        if file:
+            file.write(src)
+
+        # セーブ後にコードのチェック、全てハイライト、変更フラグをFalse、タブ名の*を消去
+        current_editor.lint()
+        current_editor.all_highlight()
+        current_editor.changed = False
+        self.reset_tab_name()
+
     def _delete_tab(self):
         """タブを削除"""
         current = self.select()

@@ -25,6 +25,7 @@ class EditorMenu(tk.Menu):
         menu_file.add_command(label='Open', command=mediator.event.open_file, accelerator='Ctrl+O')
         menu_file.add_command(label='Save', command=mediator.event.save_file, accelerator='Ctrl+S')
         menu_file.add_command(label='Delete', command=mediator.event.delete_tab, accelerator='Ctrl+D')
+        menu_file.add_command(label='Save as...', command=mediator.event.save_as)
         self.add_cascade(menu=menu_file, label='File')
 
     def create_edit_menu(self):
