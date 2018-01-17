@@ -51,15 +51,17 @@ class EditorNoteBook(ttk.Notebook):
 
         # 新規ファイルだった場合は、ファイル名を指定させて保存
         if current_editor.path is None:
-            file = filedialog.asksaveasfile(mode='w', initialdir=initial_dir)
-            if file:
-                file.write(src)
+            file_name = filedialog.asksaveasfilename(initialdir=initial_dir)
+            if file_name:
+                with open(file_name, 'w', encoding='utf-8') as file:
+                    file.write(src)
+
                 current_editor.path = file.name
                 # タブの表示名を変更
                 self.tab(current_editor, text=os.path.basename(file.name))
         # 更新
         else:
-            with open(current_editor.path, 'w') as file:
+            with open(current_editor.path, 'w', encoding='utf-8') as file:
                 file.write(src)
 
         # セーブ後にコードのチェック、全てハイライト、変更フラグをFalse、タブ名の*を消去
@@ -78,9 +80,10 @@ class EditorNoteBook(ttk.Notebook):
         src = current_editor.get_src()
 
         # 保存するファイル名を取得し、基のソースで書き込む
-        file = filedialog.asksaveasfile(mode='w', initialdir=initial_dir)
-        if file:
-            file.write(src)
+        file_name = filedialog.asksaveasfilename(initialdir=initial_dir)
+        if file_name:
+            with open(file_name, 'w', encoding='utf-8') as file:
+                file.write(src)
 
         # セーブ後にコードのチェック、全てハイライト、変更フラグをFalse、タブ名の*を消去
         current_editor.lint()
