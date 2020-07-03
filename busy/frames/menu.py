@@ -6,7 +6,7 @@ root['menu'] = EditorMenu()
 
 """
 import tkinter as tk
-
+import tkinter.font as font
 from busy import mediator
 
 
@@ -17,6 +17,7 @@ class EditorMenu(tk.Menu):
         self.create_file_menu()
         self.create_edit_menu()
         self.create_tree_menu()
+        self.create_font_menu()
 
     def create_file_menu(self):
         """Fileメニューの作成."""
@@ -45,6 +46,15 @@ class EditorMenu(tk.Menu):
         menu_tree.add_command(label='Change Root', command=mediator.event.change_dir, accelerator='F4')
         menu_tree.add_command(label='Update', command=mediator.event.update_dir, accelerator='F5')
         self.add_cascade(menu=menu_tree, label='Tree')
+
+    def create_font_menu(self):
+        """フォント管理メニューの作成"""
+        font_menu = tk.Menu(self)
+        families = [name for name in font.families() if not name.startswith('@')]
+        families.sort()
+        for font_name in families:
+            font_menu.add_command(label=font_name, command=lambda font_name=font_name: mediator.event.update_font(font_name))
+        self.add_cascade(menu=font_menu, label='Font')
 
 
 def main():

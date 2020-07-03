@@ -7,6 +7,23 @@ self.mastet.master.display_frame....
 更にMockMediatorを使うことで、各Frameを単独で実行することも容易にしています。(python note.py等)
 
 """
+import json
+import os
+from os.path import expanduser
+import tkinter.font as font
+
+home_dir = expanduser('~')
+settings_json_path = os.path.join(home_dir, 'busy_settings.json')
+
+if not os.path.exists(settings_json_path):
+    with open(settings_json_path, 'w', encoding='utf-8') as file:
+        data = {
+            'family': 'Helvetica'
+        }
+        json.dump(data, file)
+
+json_file = open(settings_json_path, 'r', encoding='utf-8')
+busy_settings = json.load(json_file)
 
 
 class MockMediator:
@@ -38,6 +55,7 @@ class EventMediator(MockMediator):
         self.info_frame = info_frame
         self.path_frame = path_frame
         self.note_frame = note_frame
+        self.current_font = font.Font(family=busy_settings['family'], size=14)
 
     def save_file(self, event=None, initial_dir=None):
         """ファイルの保存."""
@@ -136,6 +154,12 @@ class EventMediator(MockMediator):
     def save_as(self, event=None):
         """別名で保存."""
         return self.note_frame.save_as(event=event)
+
+    def get_current_font(self, event=None):
+        return self.current_font
+
+    def update_font(self, font, event=None):
+        self.current_font['family'] = font
 
 
 class SimpleMediator(EventMediator):
